@@ -163,6 +163,10 @@ input.txt{width:100%;text-align:left}
 .kpi b{display:block;font-size:21px}
 .kpi span{font-size:12px;color:var(--mut)}
 .sum{width:100%;border-collapse:collapse}.sum td{padding:6px 4px;border-top:1px solid var(--line);font-size:14px}
+.ut{display:inline-flex;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:2px;gap:2px;margin-bottom:2px}
+.ut button{border:0;background:transparent;color:var(--mut);font-weight:800;font-size:13px;padding:4px 12px;border-radius:8px;width:auto;height:auto}
+.ut button.on{background:var(--acc);color:#fff}
+.stp .ut button{width:auto;height:auto;font-size:13px}
 </style>
 </head>
 <body>
@@ -182,9 +186,9 @@ const START=new Date(2026,9,6); // martes 6 de octubre de 2026
 const MES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
 const WEEKS=[
  {n:1,t:"Técnica",rir:"3 reps en reserva",main:3,cardio:20,lvl:"nivel base",rounds:6},
- {n:2,t:"Más volumen",rir:"2 reps en reserva",main:4,cardio:22,lvl:"+1 nivel",rounds:7},
- {n:3,t:"Subir carga",rir:"1–2 reps en reserva",main:4,cardio:22,lvl:"+2 niveles",rounds:8},
- {n:4,t:"La más exigente",rir:"1 rep en reserva",main:4,cardio:22,lvl:"+3 niveles",rounds:8}
+ {n:2,t:"Más volumen",rir:"2 reps en reserva",main:4,cardio:20,lvl:"+1 nivel",rounds:7},
+ {n:3,t:"Subir carga",rir:"1–2 reps en reserva",main:4,cardio:20,lvl:"+2 niveles",rounds:8},
+ {n:4,t:"La más exigente",rir:"1 rep en reserva",main:4,cardio:20,lvl:"+3 niveles",rounds:8}
 ];
 const W=n=>WEEKS[n-1];
 /* n = nombre en portugués (Brasil) · es = nombre en español */
@@ -195,41 +199,41 @@ const EX={
   tip:"Omóplatos juntos y abajo. Barra a la parte alta del pecho. Muñeca apilada: barra en la base de la palma, alineada con el antebrazo. Si duele la muñeca (no cansancio), cambiá a mancuernas con agarre neutro."},
  jalon:{n:"Puxada frontal com pegada neutra",es:"Jalón al pecho, agarre neutro",mus:"Costas",m:1,r:10,rest:90,v:"Su1dfZDi0sk",
   tip:"Pecho arriba. Bajá hasta el mentón sin balancearte. Hombros abajo."},
- cruce:{n:"Crossover de baixo para cima",es:"Cruce de poleas de abajo hacia arriba",mus:"Peito superior",s:2,r:12,rest:60,v:"VhrLZ26mch8",
+ cruce:{n:"Crossover de baixo para cima",es:"Cruce de poleas de abajo hacia arriba",mus:"Peito superior",sw:[3,2,2,2],r:12,rest:60,v:"VhrLZ26mch8",
   tip:"Juntá las manos a la altura del mentón y apretá el centro del pecho 1 s."},
  face:{n:"Face pull na corda",es:"Face pull con cuerda",mus:"Ombro posterior",s:3,r:15,rest:60,v:"tIuXc_X8T4I",
   tip:"Tirá hacia la cara con los codos altos y abrí las manos hacia afuera. Es postura pura."},
- lat:{n:"Elevação lateral com halteres",es:"Elevaciones laterales con mancuernas",mus:"Ombro lateral",s:3,r:12,rest:45,v:"aVa9ce3SlSA",
+ lat:{n:"Elevação lateral com halteres",es:"Elevaciones laterales con mancuernas",mus:"Ombro lateral",sw:[3,2,2,2],r:12,rest:45,v:"aVa9ce3SlSA",
   tip:"Subí hasta la altura del hombro, codo apenas flexionado, sin encoger los hombros. Peso liviano."},
- curlA:{n:"Rosca direta com halteres",es:"Curl de bíceps con mancuernas",mus:"Bíceps",ss:1,sw:[2,3,3,3],r:10,rest:0,v:"RsHskJ9k_p0",
+ curlA:{n:"Rosca direta com halteres",es:"Curl de bíceps con mancuernas",mus:"Bíceps",ss:1,sw:[3,3,3,3],r:10,rest:0,v:"RsHskJ9k_p0",
   tip:"Codos pegados al cuerpo, sin balancear. Bajá controlado. Superserie: pasás directo al tríceps."},
- triA:{n:"Tríceps na polia com corda",es:"Tríceps en polea con cuerda",mus:"Tríceps",ss:1,sw:[2,3,3,3],r:12,rest:60,v:"20incKRiLek",
+ triA:{n:"Tríceps na polia com corda",es:"Tríceps en polea con cuerda",mus:"Tríceps",ss:1,sw:[3,3,3,3],r:12,rest:60,v:"20incKRiLek",
   tip:"Codos fijos a los costados. Abrí la cuerda al final del movimiento."},
  cardio:{k:"cardio",n:"Cardio contínuo (bike ou trote leve na esteira)",es:"Cardio continuo (bici o trote suave en cinta)",mus:"Fôlego",
   tip:"Ritmo en el que podés hablar con frases cortas. Bici, o trote suave en la cinta (7–8 km/h). Cada semana subí un nivel de resistencia en la bici o 0,5 km/h en la cinta."},
- rdl:{n:"Levantamento terra romeno (stiff) com barra",es:"Peso muerto rumano con barra",mus:"Lombar",m:1,r:10,rest:90,v:"pCrNlGFo7h4",
+ rdl:{n:"Levantamento terra romeno (stiff) com barra",es:"Peso muerto rumano con barra",mus:"Lombar",m:1,sw:[3,3,3,3],r:10,rest:90,v:"pCrNlGFo7h4",
   tip:"Cadera hacia atrás, rodillas apenas flexionadas, espalda neutra, barra pegada a las piernas. Semana 1: liviano para aprender el movimiento."},
  lumbar:{n:"Extensão lombar no banco (hiperextensão)",es:"Extensión lumbar en banco",mus:"Lombar",s:2,r:12,rest:60,v:"atEI-PfmpBI",
   tip:"Subí hasta quedar en línea recta con el cuerpo, sin arquear de más."},
- gemelo:{n:"Panturrilha em pé",es:"Pantorrillas de pie",mus:"Panturrilha",s:3,r:15,rest:60,v:"1BL4681pIz4",
+ gemelo:{n:"Panturrilha em pé",es:"Pantorrillas de pie",mus:"Panturrilha",sw:[2,2,2,2],r:15,rest:60,v:"1BL4681pIz4",
   tip:"Pausa de 1 s arriba y 1 s abajo estirando. Sin rebotar."},
- deadbug:{n:"Dead bug (inseto morto)",es:"Dead bug",mus:"Core",s:2,r:8,u:"por lado",nokg:1,rest:45,v:"HN3wyEcYC2g",
-  tip:"Lumbar pegada al piso todo el tiempo. Movés brazo y pierna opuestos, lento."},
+ prancha:{n:"Prancha frontal",es:"Plancha frontal",mus:"Core",s:2,r:30,u:"s",nokg:1,rest:45,v:"nmX0DysvqcQ",
+  tip:"Antebrazos bajo los hombros, cuerpo recto de la cabeza a los talones. Apretá abdomen y glúteos; no dejes caer la cadera."},
  plankLat:{n:"Prancha lateral",es:"Plancha lateral",mus:"Core",s:2,r:20,u:"s por lado",nokg:1,rest:45,v:"kyOeSuh7LLo",
   tip:"Cuerpo en línea recta, cadera arriba. Respirá normal."},
- pressMaq:{n:"Supino na máquina com pegada neutra",es:"Press de pecho en máquina, manijas neutras",mus:"Peito",m:1,r:10,rest:90,v:"iBAUNsrwWdI",
-  tip:"Omóplatos pegados al respaldo toda la serie. No encojas los hombros."},
+ supHal:{n:"Supino reto com halteres",es:"Press plano con mancuernas",mus:"Peito",m:1,r:10,rest:90,v:"W-qU8CF-WeU",
+  tip:"Omóplatos juntos y abajo. Bajá controlado hasta los costados del pecho. Si te molesta la muñeca, girá las palmas para que se miren (agarre neutro)."},
  remoPol:{n:"Remada baixa na polia com pegada neutra",es:"Remo en polea baja, agarre neutro",mus:"Costas",m:1,r:10,rest:90,v:"hiujo_wbkLU",
   tip:"Torso quieto. Tirá hacia el ombligo y juntá los omóplatos."},
  pecDeck:{n:"Voador (peck deck)",es:"Pec deck o aperturas en polea",mus:"Peito (centro)",s:3,r:12,rest:60,v:"WKfTStqIXrw",
   tip:"Apretá 1 s con las manos juntas: ese es el centro del pecho que querés llenar."},
- remoUni:{n:"Remada unilateral com halter (serrote)",es:"Remo unilateral con mancuerna",mus:"Costas",s:2,r:10,u:"por lado",rest:60,v:"3RTpS2GHo_c",
+ remoUni:{n:"Remada unilateral com halter (serrote)",es:"Remo unilateral con mancuerna",mus:"Costas",sw:[3,2,2,2],r:10,u:"por lado",rest:60,v:"3RTpS2GHo_c",
   tip:"Codo pegado al cuerpo. No gires el torso."},
  pecInv:{n:"Voador invertido",es:"Pec deck invertido",mus:"Ombro posterior",s:3,r:15,rest:60,v:"kUgxJo-dp6k",
   tip:"Brazos casi rectos. Abrí sin subir los hombros."},
- curlM:{n:"Rosca martelo com halteres",es:"Curl martillo con mancuernas",mus:"Bíceps",ss:1,sw:[2,3,3,3],r:10,rest:0,v:"mPvlpDWIoDA",
+ curlM:{n:"Rosca martelo com halteres",es:"Curl martillo con mancuernas",mus:"Bíceps",ss:1,sw:[3,3,3,3],r:10,rest:0,v:"mPvlpDWIoDA",
   tip:"Palmas enfrentadas, codos pegados. Superserie: pasás directo al tríceps."},
- triV:{n:"Tríceps na polia com barra V",es:"Tríceps en polea con barra V",mus:"Tríceps",ss:1,sw:[2,3,3,3],r:12,rest:60,v:"bjOKed5Q-YQ",
+ triV:{n:"Tríceps na polia com barra V",es:"Tríceps en polea con barra V",mus:"Tríceps",ss:1,sw:[3,3,3,3],r:12,rest:60,v:"bjOKed5Q-YQ",
   tip:"Codos fijos a los costados. Extendé completo y controlá la subida."},
  inter:{k:"inter",n:"Intervalado na bike",es:"Intervalos en bici",mus:"Fôlego",
   tip:"El «fuerte» es casi todo lo que podés dar. Los 90 s suaves son para recuperar de verdad."},
@@ -237,20 +241,20 @@ const EX={
   tip:"Peso muy liviano (1–2,5 kg). Primero 10 en «Y» como en el video, después 10 con los brazos abiertos en «T». Pulgares arriba, sin encoger hombros."},
  crucInc:{n:"Crucifixo inclinado com halteres",es:"Aperturas inclinadas con mancuernas",mus:"Peito superior",s:3,r:12,rest:60,v:"xaV9Kne7LS8",
   tip:"Banco a ~30°. Codos apenas flexionados. Bajá hasta sentir el estiramiento en el pecho, sin pasar la línea del hombro, y subí juntando las manos arriba del pecho."},
- curlAlt:{n:"Rosca alternada com halteres",es:"Curl alterno con mancuernas",mus:"Bíceps",ss:1,sw:[2,3,3,3],r:10,u:"por brazo",rest:0,v:"b-DeZccsPSY",
+ curlAlt:{n:"Rosca alternada com halteres",es:"Curl alterno con mancuernas",mus:"Bíceps",ss:1,sw:[3,3,3,3],r:10,u:"por brazo",rest:0,v:"b-DeZccsPSY",
   tip:"Un brazo por vez, girando la palma hacia arriba al subir. Codo quieto. Superserie: pasás directo al tríceps."},
- triFr:{n:"Tríceps francês com halter",es:"Extensión de tríceps sobre la cabeza con mancuerna",mus:"Tríceps",ss:1,sw:[2,3,3,3],r:12,rest:60,v:"PyNaiTP1PIA",
+ triFr:{n:"Tríceps francês com halter",es:"Extensión de tríceps sobre la cabeza con mancuerna",mus:"Tríceps",ss:1,sw:[3,3,3,3],r:12,rest:60,v:"PyNaiTP1PIA",
   tip:"Sentado con respaldo, mancuerna con las dos manos detrás de la cabeza. Codos apuntando arriba y quietos; extendé completo."},
- pallof:{n:"Pallof press na polia",es:"Pallof press en polea",mus:"Core",s:2,r:10,u:"por lado",rest:45,v:"W8Yf1uyUnoM",
-  tip:"No dejes que la polea te gire el torso. Es core antirrotación."}
+ pullover:{n:"Pullover na polia (braços estendidos)",es:"Pullover en polea alta, brazos rectos",mus:"Costas",sw:[3,2,2,2],r:12,rest:60,v:"dTbh56xxX-g",
+  tip:"Brazos casi rectos, inclinado un poco hacia adelante. Llevá la barra desde arriba hasta los muslos usando la espalda, sin doblar los codos. Hombros abajo."},
 };
 /* Calentamiento y estiramientos: secs = tiempo de cada tramo; sides = lados; reps = veces */
 const WU=[
- {n:"Série leve de aproximação",es:"Serie liviana de aproximación",dose:"1 × 12, poco peso",secs:60,v:"",tip:"Con poco peso, del primer ejercicio del día. En días de cardio: arrancá el cardio suave."},
- {n:"Retração do queixo na parede (chin tuck)",es:"Retracción de mentón contra la pared",dose:"10 reps",secs:40,v:"TGeim9s1Apo",vv:1,tip:"Nuca hacia la pared, sin levantar la cara."},
- {n:"Deslizamento na parede (wall slide)",es:"Wall slides",dose:"10 reps",secs:45,v:"eo0MhjA40hc",tip:"Espalda y brazos pegados a la pared al subir."},
- {n:"Abertura com elástico (band pull-apart)",es:"Band pull-apart",dose:"15 reps",secs:40,v:"NqWQ9n6XDCk",tip:"Juntá los omóplatos, hombros abajo. Sirve una polea liviana."},
- {n:"Extensão torácica no rolo ou banco",es:"Extensión torácica sobre rodillo",dose:"8 reps",secs:40,v:"_67IyHPxCnQ",tip:"Arqueá solo la espalda alta, no la lumbar."}
+ {n:"Série leve de aproximação",es:"Serie liviana de aproximación",dose:"1 × 12, poco peso",v:"",tip:"Con poco peso, del primer ejercicio del día. En días de cardio: arrancá el cardio suave."},
+ {n:"Retração do queixo na parede (chin tuck)",es:"Retracción de mentón contra la pared",dose:"10 reps",v:"TWzly9Xswt8",tip:"De pie, espalda y nuca contra la pared. Llevá el mentón hacia atrás como haciendo papada, sin levantar la cara. 2 s y soltá."},
+ {n:"Deslizamento na parede (wall slide)",es:"Wall slides",dose:"10 reps",v:"eo0MhjA40hc",tip:"Espalda y brazos pegados a la pared al subir."},
+ {n:"Abertura com elástico (band pull-apart)",es:"Band pull-apart",dose:"15 reps",v:"NqWQ9n6XDCk",tip:"Juntá los omóplatos, hombros abajo. Sirve una polea liviana."},
+ {n:"Extensão torácica no rolo ou banco",es:"Extensión torácica sobre rodillo",dose:"8 reps",v:"_67IyHPxCnQ",tip:"Arqueá solo la espalda alta, no la lumbar."}
 ];
 const STR={
  pec:{n:"Alongamento de peitoral na porta",es:"Pecho en marco de puerta",secs:30,sides:2,reps:2,v:"1zduQK7PCBI",vv:1,tip:"Antebrazo en el marco, codo a la altura del hombro. Girá el cuerpo suave."},
@@ -262,7 +266,7 @@ const STR={
  gem:{n:"Alongamento de panturrilha na parede",es:"Pantorrilla en la pared",secs:30,sides:2,reps:1,v:"1JEgLZ9NHf8",vv:1,tip:"Talón apoyado, pierna de atrás estirada."}
 };
 const DESK=[
- {n:"Retração do queixo",dose:"10 reps",v:"TGeim9s1Apo",vv:1,tip:"Llevá la cabeza hacia atrás, como haciendo papada."},
+ {n:"Retração do queixo",dose:"10 reps",v:"CKUQMxK8-bw",tip:"Llevá la cabeza hacia atrás, como haciendo papada."},
  {n:"Abrir o peito",dose:"20 s",v:"VXyFRWTRIYg",tip:"Manos entrelazadas atrás, juntá omóplatos."},
  {n:"Alongamento do trapézio",dose:"20 s por lado",v:"3LIhdRvaUSU",tip:"Oreja hacia el hombro, mano opuesta abajo."},
  {n:"Extensão torácica na cadeira",dose:"8 reps",v:"4ZqOMX-18O0",tip:"Manos en la nuca, arqueá la espalda alta sobre el respaldo."},
@@ -270,16 +274,16 @@ const DESK=[
 ];
 const DAYS=[
  {id:1,dia:"Martes",ab:"Mar",t:"Torso A",foco:"Espalda · pecho alto · brazos",ex:["remo","pressInc","jalon","cruce","face","lat","curlA","triA"],str:["pec","trapS","elev","cuelloAnt","flex","dorsal"]},
- {id:2,dia:"Miércoles",ab:"Mié",t:"Cardio + espalda baja",foco:"Aire · lumbar · core",ex:["cardio","rdl","lumbar","gemelo","deadbug","plankLat"],str:["pec","trapS","elev","cuelloAnt","flex","dorsal","gem"]},
- {id:3,dia:"Jueves",ab:"Jue",t:"Torso B",foco:"Pecho centro · espalda · brazos",ex:["pressMaq","remoPol","pecDeck","remoUni","pecInv","lat","curlM","triV"],str:["pec","trapS","elev","cuelloAnt","flex","dorsal"]},
- {id:4,dia:"Viernes",ab:"Vie",t:"Postura, pecho + intervalos",foco:"Aire · postura · pecho · brazos",ex:["inter","yt","crucInc","curlAlt","triFr","pallof"],str:["pec","trapS","elev","cuelloAnt","flex","dorsal"]}
+ {id:2,dia:"Miércoles",ab:"Mié",t:"Cardio + espalda baja",foco:"Aire · lumbar · core",ex:["cardio","rdl","lumbar","gemelo","prancha","plankLat"],str:["pec","trapS","elev","cuelloAnt","flex","dorsal","gem"]},
+ {id:3,dia:"Jueves",ab:"Jue",t:"Torso B",foco:"Pecho centro · espalda · brazos",ex:["supHal","remoPol","pecDeck","remoUni","pecInv","lat","curlM","triV"],str:["pec","trapS","elev","cuelloAnt","flex","dorsal"]},
+ {id:4,dia:"Viernes",ab:"Vie",t:"Postura, pecho + intervalos",foco:"Aire · postura · pecho · espalda · brazos",ex:["inter","yt","face","crucInc","curlAlt","triFr","pullover"],str:["pec","trapS","elev","cuelloAnt","flex","dorsal"]}
 ];
-const TRANS=45, PREP=5; // s para cambiar de ejercicio / para acomodarse entre tramos
+const TRANS=45; // s para cambiar de ejercicio
 
 /* ============ ESTADO ============ */
 const KEY="gymplan_oct2026_v2", RKEY="gymplan_run_v3", SKEY="gymplan_snd";
-const blank=()=>({log:{},chk:{},ses:{},desk:{}});
-function norm(o){o=o&&typeof o==="object"?o:{};o.log=o.log||{};o.chk=o.chk||{};o.ses=o.ses||{};o.desk=o.desk||{};return o}
+const blank=()=>({log:{},chk:{},ses:{},desk:{},unit:{}});
+function norm(o){o=o&&typeof o==="object"?o:{};o.log=o.log||{};o.chk=o.chk||{};o.ses=o.ses||{};o.desk=o.desk||{};o.unit=o.unit||{};return o}
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function lsDel(k){try{localStorage.removeItem(k)}catch(e){}}
@@ -312,13 +316,16 @@ function today(){const t=new Date();return t.getFullYear()+"-"+String(t.getMonth
 function mmss(ms){ms=Math.max(0,ms);const s=Math.ceil(ms/1000);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
 function hms(ms){ms=Math.max(0,ms);const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60);return(h?h+":"+String(m).padStart(2,"0"):String(m).padStart(2,"0"))+":"+String(s%60).padStart(2,"0")}
 const num=v=>{const x=parseFloat(String(v==null?"":v).replace(",","."));return isNaN(x)?null:x};
-function lastFor(w,d,id,i){for(let p=w-1;p>=1;p--){const L=S.log[k(p,d,id)];if(L&&L.sets&&L.sets.length){const s=L.sets[i]||L.sets[L.sets.length-1];if(s&&(s.kg||s.reps))return{w:p,kg:s.kg,reps:s.reps}}}return null}
-function prevSummary(w,d,id){for(let p=w-1;p>=1;p--){const L=S.log[k(p,d,id)];if(L&&L.sets){const s=L.sets.filter(x=>x&&(x.kg||x.reps)).map(x=>(x.kg?x.kg+"kg×":"")+(x.reps||"?"));if(s.length)return"Semana "+p+": "+s.join(" · ")}if(L&&L.note)return"Semana "+p+": "+L.note}return""}
+const unitOf=id=>(S.unit&&S.unit[id])||"kg";
+const wtxt=s=>s&&s.kg?s.kg+" "+(s.u||"kg"):"";
+const toKg=s=>(num(s.kg)||0)*((s.u||"kg")==="lb"?0.4536:1);
+function lastFor(w,d,id,i){for(let p=w-1;p>=1;p--){const L=S.log[k(p,d,id)];if(L&&L.sets&&L.sets.length){const s=L.sets[i]||L.sets[L.sets.length-1];if(s&&(s.kg||s.reps))return{w:p,kg:s.kg,u:s.u||"kg",reps:s.reps}}}return null}
+function prevSummary(w,d,id){for(let p=w-1;p>=1;p--){const L=S.log[k(p,d,id)];if(L&&L.sets){const s=L.sets.filter(x=>x&&(x.kg||x.reps)).map(x=>(x.kg?wtxt(x)+" × ":"")+(x.reps||"?"));if(s.length)return"Semana "+p+": "+s.join(" · ")}if(L&&L.note)return"Semana "+p+": "+L.note}return""}
 function cardioSpec(e,w){return e.k==="cardio"?W(w).cardio+" min · "+W(w).lvl:W(w).rounds+" × 30 s fuerte / 90 s suave"}
 /* duración estimada del día (min): series ~40 s, descansos, 45 s de cambio, guiados */
 function workSecs(e){if(e.u&&e.u.indexOf("s por")===0)return e.r*2+15;if(e.u==="s")return e.r+15;if(e.u)return 60;return 40}
-function guided(kind,d){const list=kind==="warm"?WU:DAYS[d-1].str.map(s=>STR[s]);const b=[];list.forEach(x=>{for(let r=0;r<(x.reps||1);r++)for(let sd=0;sd<(x.sides||1);sd++)b.push({x,side:(x.sides||1)>1?sd:-1,rep:r})});return b}
-function guidedSecs(kind,d){const b=guided(kind,d);return b.reduce((a,x)=>a+x.x.secs,0)+PREP*(b.length-1)}
+function guided(kind,d){const list=kind==="warm"?WU:DAYS[d-1].str.map(s=>STR[s]);const b=[];list.forEach(x=>{if(!x.secs){b.push({x,side:-1,rep:0});return}for(let r=0;r<(x.reps||1);r++)for(let sd=0;sd<(x.sides||1);sd++)b.push({x,side:(x.sides||1)>1?sd:-1,rep:r})});return b}
+function guidedSecs(kind,d){return guided(kind,d).reduce((a,x)=>a+(x.x.secs?x.x.secs+8:45),0)} // manual ~45 s; con tiempo: tiempo + 8 s para acomodarse
 function estDay(w,d){let t=guidedSecs("warm",d)+guidedSecs("str",d);const ex=DAYS[d-1].ex;
  for(let i=0;i<ex.length;i++){const e=EX[ex[i]];
   if(e.ss){const b=EX[ex[i+1]],n=setsOf(e,w);t+=n*(workSecs(e)+workSecs(b))+(n-1)*b.rest+TRANS;i++;continue}
@@ -407,15 +414,16 @@ function openEx(id){
  else{
   h+='<div class="big2">'+setsOf(e,w)+' × '+esc(repTxt(e))+'</div><span class="chip">⏱ '+restTxt(e)+'</span><span class="chip">'+esc(e.mus)+'</span>'+(e.m?'<span class="chip k">'+esc(W(w).rir)+'</span>':'')+(e.ss?'<span class="chip">🔗 superserie</span>':'')+'<div class="tip">💡 '+esc(e.tip)+'</div>';
   const ph=prevSummary(w,d,id);if(ph)h+='<div class="mut sm" style="margin-top:8px">↩ '+esc(ph)+'</div>';
-  h+='<div class="lbl">Tu registro</div>';
-  for(let i=0;i<setsOf(e,w);i++){const s=(L.sets&&L.sets[i])||{};h+='<div class="setrow"><span class="mut" style="width:58px">Serie '+(i+1)+'</span>'+(e.nokg?'':'<input class="in" inputmode="decimal" placeholder="kg" data-f="kg" data-i="'+i+'" data-k="'+key+'" value="'+esc(s.kg||"")+'">kg ×')+'<input class="in" inputmode="numeric" placeholder="reps" data-f="reps" data-i="'+i+'" data-k="'+key+'" value="'+esc(s.reps||"")+'"></div>'}
+  const un=unitOf(id);
+  h+='<div class="lbl" style="display:flex;justify-content:space-between;align-items:center">Tu registro'+(e.nokg?'':'<span class="ut" style="margin:0">'+["kg","lb"].map(u=>'<button data-act="unit" data-m="1" data-id="'+id+'" data-v="'+u+'" class="'+(un===u?"on":"")+'">'+u+'</button>').join("")+'</span>')+'</div>';
+  for(let i=0;i<setsOf(e,w);i++){const s=(L.sets&&L.sets[i])||{};h+='<div class="setrow"><span class="mut" style="width:58px">Serie '+(i+1)+'</span>'+(e.nokg?'':'<input class="in" inputmode="decimal" placeholder="'+un+'" data-f="kg" data-i="'+i+'" data-k="'+key+'" value="'+esc(s.kg||"")+'">'+un+' ×')+'<input class="in" inputmode="numeric" placeholder="reps" data-f="reps" data-i="'+i+'" data-k="'+key+'" value="'+esc(s.reps||"")+'"></div>'}
  }
  openModal(h+'<button class="btn big" style="margin-top:16px" data-act="close">Listo</button>');
 }
 function openList(title,items){
  let h=mhead(title);
  items.forEach(x=>{h+='<div class="mrow">'+(x.v?'<button class="th" data-act="video" data-id="'+x.v+'" data-vv="'+(x.vv?1:0)+'" data-t="'+esc(x.n)+'"><img loading="lazy" src="'+thumb(x.v)+'" alt=""><b>▶</b></button>':'<span class="ico">🏋️</span>')+
-  '<div><b>'+esc(x.n)+'</b><div class="spec" style="font-size:14px">'+esc(x.dose||((x.reps>1?x.reps+" × ":"")+x.secs+" s"+(x.sides>1?" por lado":"")))+'</div><div class="mut sm">'+esc(x.tip)+'</div></div></div>'});
+  '<div><b>'+esc(x.n)+'</b><div class="spec" style="font-size:14px">'+esc(x.secs?((x.reps>1?x.reps+" × ":"")+x.secs+" s"+(x.sides>1?" por lado":"")):x.dose)+'</div><div class="mut sm">'+esc(x.tip)+'</div></div></div>'});
  openModal(h+'<button class="btn big" style="margin-top:16px" data-act="close">Listo</button>');
 }
 
@@ -499,19 +507,22 @@ function guidedView(kind){
  const b=guided(kind,R.d),isW=kind==="warm",col=isW?"var(--warm)":"var(--str)",title=isW?"Aquecimento postural":"Alongamentos finais";
  const total=Math.round(guidedSecs(kind,R.d)/60);
  if(R.ph==="work"){
-  let list='',seen=new Set();b.forEach(x=>{if(seen.has(x.x.n))return;seen.add(x.x.n);const cnt=b.filter(y=>y.x===x.x).length;
-   list+='<div class="gl"><div class="tx"><b>'+esc(x.x.n)+'</b><div class="mut sm">'+esc(x.x.dose||"")+(x.x.dose?" · ":"")+(cnt>1?cnt+" × ":"")+x.x.secs+' s'+(x.side>=0?" (por lado)":"")+'</div></div>'+vbtn(x.x.v,x.x.vv,x.x.n)+'</div>'});
-  return['<div class="kind" style="color:'+col+'">'+(isW?"Paso 1":"Último paso")+' · '+total+' min</div><div class="tname">'+title+'</div><div class="mut sm" style="margin:4px 0 10px">Cada uno tiene su tiempo. Avanza solo con un pitido y te da '+PREP+' s para acomodarte.</div><div class="card" style="margin:0">'+list+'</div>',
+  let list='',seen=new Set();b.forEach(x=>{if(seen.has(x.x.n))return;seen.add(x.x.n);
+   const dose=x.x.secs?((x.x.reps>1?x.x.reps+" × ":"")+x.x.secs+" s"+(x.x.sides>1?" por lado":"")):x.x.dose;
+   list+='<div class="gl"><div class="tx"><b>'+esc(x.x.n)+'</b><div class="mut sm">'+esc(dose)+'</div></div>'+vbtn(x.x.v,x.x.vv,x.x.n)+'</div>'});
+  return['<div class="kind" style="color:'+col+'">'+(isW?"Paso 1":"Último paso")+' · ~'+total+' min</div><div class="tname">'+title+'</div><div class="card" style="margin-top:10px">'+list+'</div>',
    foot('<button class="btn big" data-act="gstart" style="background:'+col+';color:#111">▶ Empezar</button>')]}
  const cur=b[Math.min(R.sub,b.length-1)],x=cur.x;
  const lado=cur.side<0?"":(cur.side===0?"Lado izquierdo":"Lado derecho"),vez=(x.reps||1)>1?"Vez "+(cur.rep+1)+" de "+x.reps:"";
- const head='<div class="kind" style="color:'+col+'">'+title+' · '+(R.sub+1)+' de '+b.length+'</div>';
- if(R.ph==="switch"){
-  return[head+'<div class="mut" style="text-align:center;margin-top:14px">Prepárate para</div><div class="tname" style="text-align:center">'+esc(x.n)+'</div><div style="text-align:center">'+(lado||vez?'<span class="side" style="background:'+col+';color:#111">'+esc([lado,vez].filter(Boolean).join(" · "))+'</span>':'')+'</div>'+ring(left(),R.pD,col,"acomodate"),
-   foot('<button class="btn big" data-act="skip">Ya estoy</button>')]}
- return[head+'<div class="tname">'+esc(x.n)+'</div>'+(x.es?'<div class="tes">'+esc(x.es)+'</div>':'')+'<div class="row">'+(lado||vez?'<span class="side" style="background:'+col+';color:#111;margin:0">'+esc([lado,vez].filter(Boolean).join(" · "))+'</span>':'')+(x.dose?'<span class="chip" style="margin:0">'+esc(x.dose)+'</span>':'')+vbtn(x.v,x.vv,x.n)+'</div>'+
-  ring(left(),R.pD,col,isW?"hacelo con calma":"respirá y soltá")+'<div class="tip">💡 '+esc(x.tip)+'</div>',
-  foot('<button class="btn big" data-act="skip" style="background:'+col+';color:#111">Siguiente ›</button>')]}
+ const tagTxt=[lado,vez].filter(Boolean).join(" · ");
+ let h='<div class="kind" style="color:'+col+'">'+title+' · '+(R.sub+1)+' de '+b.length+'</div><div class="tname">'+esc(x.n)+'</div>'+(x.es?'<div class="tes">'+esc(x.es)+'</div>':'')+
+  '<div class="row">'+(tagTxt?'<span class="side" style="background:'+col+';color:#111;margin:0">'+esc(tagTxt)+'</span>':'')+vbtn(x.v,x.vv,x.n)+'</div>';
+ if(!x.secs)return[h+'<div class="setlbl" style="margin-top:26px">'+esc(x.dose)+'</div><div class="tip">💡 '+esc(x.tip)+'</div>',
+  foot('<button class="btn big" data-act="gnext" style="background:'+col+';color:#111">✓ Hecho</button>')];
+ if(R.ph==="bout")return[h+ring(left(),R.pD,col,"respirá y soltá")+'<div class="tip">💡 '+esc(x.tip)+'</div>',
+  foot('<button class="btn o big" data-act="skip">Terminar ›</button>')];
+ return[h+'<div class="setlbl" style="margin-top:26px">'+x.secs+' segundos</div><div class="target">Acomodate y tocá iniciar.</div><div class="tip">💡 '+esc(x.tip)+'</div>',
+  foot('<button class="btn big" data-act="gtime" style="background:'+col+';color:#111">▶ Iniciar '+x.secs+' s</button>')]}
 function curSetInfo(st){
  if(st.t==="ex"){const e=EX[st.id];return{id:st.id,e,i:R.sub,n:setsOf(e,R.w)}}
  const n=setsOf(EX[st.ids[0]],R.w),which=R.sub%2,id=st.ids[which];return{id,e:EX[id],i:Math.floor(R.sub/2),n,which}}
@@ -528,9 +539,9 @@ function exView(st,steps){
  const cur=(L.sets&&L.sets[c.i])||{},prevIn=c.i>0&&L.sets&&L.sets[c.i-1]?L.sets[c.i-1]:null,lw=lastFor(w,d,c.id,c.i);
  const kg=cur.kg||(prevIn&&prevIn.kg)||(lw&&lw.kg)||"",reps=cur.reps||e.r;
  let body=head+dots+'<div class="setlbl" id="setlbl">Serie '+(c.i+1)+' de '+c.n+'</div><div class="target">Objetivo: <b>'+esc(repTxt(e))+'</b></div>';
- body+='<div class="inputs" style="'+(e.nokg?"grid-template-columns:1fr":"")+'">'+(e.nokg?'':'<div class="stp"><label>Peso (kg)</label><div><button data-act="adj" data-f="kg" data-v="-2.5">−</button><input id="kg" inputmode="decimal" value="'+esc(kg)+'" placeholder="0"><button data-act="adj" data-f="kg" data-v="2.5">+</button></div></div>')+
+ body+='<div class="inputs" style="'+(e.nokg?"grid-template-columns:1fr":"")+'">'+(e.nokg?'':'<div class="stp"><div class="ut">'+["kg","lb"].map(u=>'<button data-act="unit" data-id="'+c.id+'" data-v="'+u+'" class="'+(unitOf(c.id)===u?"on":"")+'">'+u+'</button>').join("")+'</div><div><button data-act="adj" data-f="kg" data-id="'+c.id+'" data-v="-1">−</button><input id="kg" inputmode="decimal" value="'+esc(kg)+'" placeholder="0"><button data-act="adj" data-f="kg" data-id="'+c.id+'" data-v="1">+</button></div></div>')+
   '<div class="stp"><label>'+(e.u&&e.u.indexOf("s")===0?"Segundos":"Repeticiones")+'</label><div><button data-act="adj" data-f="reps" data-v="-1">−</button><input id="reps" inputmode="numeric" value="'+esc(reps)+'"><button data-act="adj" data-f="reps" data-v="1">+</button></div></div></div>';
- if(lw)body+='<div class="prev">↩ Semana '+lw.w+': '+(e.nokg?"":(lw.kg||"–")+" kg × ")+(lw.reps||"–")+'</div>';
+ if(lw)body+='<div class="prev">↩ Semana '+lw.w+': '+(e.nokg?"":(lw.kg||"–")+" "+lw.u+" × ")+(lw.reps||"–")+'</div>';
  body+='<div class="tip">💡 '+esc(e.tip)+'</div>';
  return[body,foot('<button class="btn big" data-act="setdone">✓ Serie hecha</button>')]}
 function cardioView(st,steps){
@@ -547,15 +558,15 @@ function cardioView(st,steps){
 function summaryView(){
  const w=R.w,d=R.d,D=DAYS[d-1];let sets=0,vol=0,pvol=0,rows='';
  D.ex.forEach(id=>{const e=EX[id];if(e.k){rows+='<tr><td>'+esc(e.n)+'</td><td style="text-align:right">'+(S.chk[k(w,d,id)]?"✓":"–")+'</td></tr>';return}
-  const L=(S.log[k(w,d,id)]||{}).sets||[];let best=null;L.forEach(s=>{if(s&&s.done){sets++;vol+=(num(s.kg)||0)*(num(s.reps)||0);if(!best||(num(s.kg)||0)>=(num(best.kg)||0))best=s}});
-  if(w>1)((S.log[k(w-1,d,id)]||{}).sets||[]).forEach(s=>{if(s)pvol+=(num(s.kg)||0)*(num(s.reps)||0)});
-  rows+='<tr><td>'+esc(e.n)+'</td><td class="mut" style="text-align:right;white-space:nowrap">'+(best?(e.nokg||!best.kg?"":best.kg+"kg × ")+best.reps:"–")+'</td></tr>'});
+  const L=(S.log[k(w,d,id)]||{}).sets||[];let best=null;L.forEach(s=>{if(s&&s.done){sets++;vol+=toKg(s)*(num(s.reps)||0);if(!best||toKg(s)>=toKg(best))best=s}});
+  if(w>1)((S.log[k(w-1,d,id)]||{}).sets||[]).forEach(s=>{if(s)pvol+=toKg(s)*(num(s.reps)||0)});
+  rows+='<tr><td>'+esc(e.n)+'</td><td class="mut" style="text-align:right;white-space:nowrap">'+(best?(e.nokg||!best.kg?"":wtxt(best)+" × ")+best.reps:"–")+'</td></tr>'});
  const dur=R.end||el(),diff=pvol?Math.round((vol-pvol)/pvol*100):null;
  return['<div style="text-align:center;margin-top:12px;font-size:50px">🏁</div><div class="tname" style="text-align:center">¡Día terminado!</div><div class="mut" style="text-align:center">Semana '+w+' · Día '+d+' · '+esc(D.t)+'</div>'+
   '<div class="kpi"><div><b>'+hms(dur)+'</b><span>tiempo</span></div><div><b>'+sets+'</b><span>series</span></div><div><b>'+Math.round(vol)+'</b><span>kg'+(diff!==null?' · '+(diff>=0?"▲":"▼")+Math.abs(diff)+'%':"")+'</span></div></div>'+
   '<div class="card"><table class="sum"><tbody>'+rows+'</tbody></table></div>',
   '<button class="btn big" data-act="finishclose">Volver al plan</button>']}
-function logSet(id,i,kg,reps){const key=k(R.w,R.d,id);S.log[key]=S.log[key]||{};const L=S.log[key];L.sets=L.sets||[];L.sets[i]={kg:kg==null?"":String(kg),reps:reps==null?"":String(reps),done:1};save()}
+function logSet(id,i,kg,reps){const key=k(R.w,R.d,id);S.log[key]=S.log[key]||{};const L=S.log[key];L.sets=L.sets||[];L.sets[i]={kg:kg==null?"":String(kg),u:unitOf(id),reps:reps==null?"":String(reps),done:1};save()}
 function nextStep(){const steps=stepsOf(R.d);R.i++;R.sub=0;
  if(R.i>=steps.length){finishDay();return}
  const st=steps[R.i];
@@ -566,13 +577,14 @@ function goBack(){
  const steps=stepsOf(R.d),st=steps[R.i];
  const prevStep=()=>{if(R.i===0){R.sub=0;R.ph="work";saveR();renderTrain();return}
   R.i--;const p=steps[R.i];R.sub=lastSub(p);
-  if(p.t==="warm"||p.t==="str"){phase("bout",guided(p.t,R.d)[R.sub].x.secs);return}
+  if(p.t==="warm"||p.t==="str"){R.ph="gwait";saveR();renderTrain();return}
   R.ph=(p.t==="cardio"||p.t==="inter")?"post":"work";saveR();renderTrain()};
  if(R.ph==="trans"){prevStep();return}
  if(st.t==="ex"||st.t==="ss"){if(R.ph==="rest"||R.sub>0){R.sub--;R.ph="work";saveR();renderTrain()}else prevStep();return}
  if(st.t==="warm"||st.t==="str"){
   if(R.ph==="work"){prevStep();return}
-  if(R.ph==="switch"||R.sub>0){R.sub=Math.max(0,R.sub-1);phase("bout",guided(st.t,R.d)[R.sub].x.secs);return}
+  if(R.ph==="bout"){R.ph="gwait";saveR();renderTrain();return}
+  if(R.sub>0){R.sub--;R.ph="gwait";saveR();renderTrain();return}
   R.ph="work";saveR();renderTrain();return}
  if(R.ph==="work")prevStep();else{R.ph="work";saveR();renderTrain()}
 }
@@ -582,13 +594,12 @@ function onPhaseEnd(){
  if(R.ph==="run"){R.ph="post";saveR();beep(3);renderTrain();return}
  if(R.ph==="bout"){const b=guided(st.t,R.d);R.sub++;
   if(R.sub>=b.length){S.chk[k(R.w,R.d,st.t)]=true;save();beep(2);if(st.t==="str")finishDay();else nextStep();return}
-  beep(1,660);phase("switch",PREP);return}
- if(R.ph==="switch"){beep(1);phase("bout",guided(st.t,R.d)[R.sub].x.secs);return}
+  beep(2,660);R.ph="gwait";saveR();renderTrain();return}
 }
 function tick(){
  if(!R||!$("#train").classList.contains("on"))return;
  const c=$("#clk");if(c&&R.ph!=="done")c.textContent=hms(el());
- if(R.pA||R.ph==="done"||R.ph==="work"||R.ph==="post")return;
+ if(R.pA||R.ph==="done"||R.ph==="work"||R.ph==="post"||R.ph==="gwait")return;
  const st=stepsOf(R.d)[R.i],C=2*Math.PI*90;
  if(R.ph==="run"&&st&&st.t==="inter"){
   const t=el()-R.pS,seg=Math.floor(t/120000)*2+((t%120000)<30000?0:1);
@@ -598,7 +609,7 @@ function tick(){
   if(cd)cd.textContent=mmss(rem);if(it)it.textContent=mmss(left());if(rg)rg.setAttribute("stroke-dashoffset",C*(1-rem/(fast?30000:90000)));
  } else {
   const cd=$("#cd"),rg=$("#rg"),l=left();if(cd)cd.textContent=mmss(l);if(rg)rg.setAttribute("stroke-dashoffset",C*(1-Math.max(0,l)/R.pD));
-  if((R.ph==="rest"||R.ph==="bout")&&l<=3000&&l>0&&R.ann!==Math.ceil(l/1000)){R.ann=Math.ceil(l/1000);beep(1,520)}
+  if(R.ph==="rest"&&l<=3000&&l>0&&R.ann!==Math.ceil(l/1000)){R.ann=Math.ceil(l/1000);beep(1,520)}
  }
  if(left()<=0)onPhaseEnd();
 }
@@ -631,10 +642,13 @@ document.addEventListener("click",ev=>{
   case"discard":closeModal();R=null;saveR();closeTrain();break;
   case"pause":if(!R)break;unlockAudio();if(R.pA){R.pT+=Date.now()-R.pA;R.pA=null;keepAwake()}else{R.pA=Date.now();releaseWake()}saveR();renderTrain();break;
   case"back":goBack();break;
-  case"gstart":{unlockAudio();const st=stepsOf(R.d)[R.i];R.sub=0;phase("bout",guided(st.t,R.d)[0].x.secs);break}
+  case"gstart":unlockAudio();R.sub=0;R.ph="gwait";saveR();renderTrain();break;
+  case"gtime":{unlockAudio();const st=stepsOf(R.d)[R.i];phase("bout",guided(st.t,R.d)[R.sub].x.secs);break}
+  case"gnext":{const st=stepsOf(R.d)[R.i],b=guided(st.t,R.d);R.sub++;if(R.sub>=b.length){S.chk[k(R.w,R.d,st.t)]=true;save();if(st.t==="str")finishDay();else nextStep()}else{R.ph="gwait";saveR();renderTrain()}break}
+  case"unit":{const id=el_.dataset.id,kgI=$("#kg"),val=kgI?kgI.value:null;S.unit[id]=v;save();if(el_.dataset.m){openEx(id)}else{renderTrain();const n=$("#kg");if(n&&val!==null)n.value=val}break}
   case"skip":R.pD=el()-R.pS;onPhaseEnd();break;
   case"plus":R.pD+=15000;saveR();break;
-  case"adj":{const inp=$("#"+el_.dataset.f);if(!inp)break;const x=(num(inp.value)||0)+parseFloat(v);inp.value=String(Math.max(0,Math.round(x*10)/10));break}
+  case"adj":{const inp=$("#"+el_.dataset.f);if(!inp)break;const x=(num(inp.value)||0)+parseFloat(v)*(el_.dataset.f==="kg"?(unitOf(el_.dataset.id)==="lb"?5:2.5):1);inp.value=String(Math.max(0,Math.round(x*10)/10));break}
   case"setdone":{unlockAudio();const st=stepsOf(R.d)[R.i],c=curSetInfo(st),kgI=$("#kg"),rI=$("#reps");
    logSet(c.id,c.i,c.e.nokg?"":(kgI?kgI.value.replace(",","."):""),rI?rI.value:"");
    if(st.t==="ex"){if(c.i<c.n-1){R.sub++;phase("rest",c.e.rest)}else{S.chk[k(R.w,R.d,c.id)]=true;save();nextStep()}}
@@ -663,7 +677,7 @@ document.addEventListener("change",ev=>{const t=ev.target;
 document.addEventListener("input",ev=>{const t=ev.target,key=t.dataset&&t.dataset.k;if(!key)return;
  S.log[key]=S.log[key]||{};
  if(t.dataset.f==="note")S.log[key].note=t.value;
- else{const i=+t.dataset.i;S.log[key].sets=S.log[key].sets||[];S.log[key].sets[i]=S.log[key].sets[i]||{};S.log[key].sets[i][t.dataset.f]=t.value}
+ else{const i=+t.dataset.i;S.log[key].sets=S.log[key].sets||[];S.log[key].sets[i]=S.log[key].sets[i]||{};S.log[key].sets[i][t.dataset.f]=t.value;S.log[key].sets[i].u=unitOf(key.split(".")[2])}
  save();
 });
 
