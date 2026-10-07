@@ -259,6 +259,40 @@ input.txt{width:100%;text-align:left}
 .mbox .ib{border:0}
 .big2{font-size:24px}
 .side{margin-top:8px!important}
+
+/* ===== v7: pasos, carteles, acciones ===== */
+.secl{display:flex;align-items:center;gap:8px;margin:20px 4px 8px;font-size:12px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--ink)}
+.secl i{width:10px;height:10px;border-radius:3px;background:var(--c)}
+.secl span{margin-left:auto;color:var(--mut);font-weight:600;letter-spacing:0;text-transform:none}
+.xlist{margin-top:0}
+.xrow{grid-template-columns:22px 52px 1fr 16px;border-left:3px solid var(--c,transparent)}
+.xn{font-size:12px;font-weight:800;color:var(--mut);text-align:center}
+.xrow.cur{background:var(--card2)}
+.xrow.ok .tt{color:var(--mut)}
+.mbox .xrow{grid-template-columns:22px 1fr 22px}
+.btn.s.on{background:var(--acc);color:#fff}
+.banner{display:block;border-radius:12px;padding:9px 12px;font-size:13px;font-weight:800;letter-spacing:.6px;color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent);border:1.5px solid color-mix(in srgb,var(--c) 45%,transparent)}
+.banner.f{background:var(--c);color:#111;border-color:var(--c);font-size:16px;text-align:center;padding:12px}
+.tname{margin-top:12px}
+.tfoot{flex-direction:column;gap:8px}
+.fmain{display:flex;gap:10px;width:100%}
+.fmain .btn.big{flex:1}
+.xact{display:flex;gap:8px;width:100%}
+.xact button{flex:1;border:0;background:var(--card);color:var(--ink);border-radius:12px;padding:11px 8px;font-size:13.5px;font-weight:600}
+.late{margin-top:14px;background:color-mix(in srgb,var(--warm) 14%,var(--card));border-radius:12px;padding:10px 12px;font-size:13.5px;line-height:1.4}
+.late button{display:block;margin-top:8px;border:0;background:var(--warm);color:#111;font-weight:800;border-radius:10px;padding:8px 12px}
+.altc{margin-top:16px;background:var(--card);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:2px}
+.altc small{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+.altc span{color:var(--mut);font-size:13px}.altc .vlink{align-self:flex-start;margin-top:6px}
+a.vlink{text-decoration:none}
+.nextc{display:flex;flex-direction:column;gap:2px}
+.nextc small{color:var(--mut);font-size:12px}.nextc b{font-size:17px}.nextc span{color:var(--mut);font-size:14px}.nextc .vlink{align-self:flex-start;margin-top:6px}
+.steps i{background:color-mix(in srgb,var(--c) 22%,var(--bg))}
+.steps i.d{background:var(--c)}
+.steps i.c{background:#fff}
+.steps i.sk{background:transparent;outline:1.5px dashed var(--c)}
+.side{display:inline-block;color:#111;border-radius:99px;padding:3px 12px;font-weight:800;font-size:13px;margin-top:8px}
+.tbar .clk small+b+small{margin-top:1px}
 </style>
 </head>
 <body>
@@ -273,107 +307,112 @@ input.txt{width:100%;text-align:left}
 
 <script>
 "use strict";
-/* ============ DATOS DEL PLAN ============ */
+/* ================= RUTINA ================= */
 const START=new Date(2026,9,6); // martes 6 de octubre de 2026
 const MES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const MESL=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
 const WEEKS=[
- {n:1,t:"Técnica",rir:"3 reps en reserva",main:3,cardio:20,lvl:"nivel base",rounds:6},
- {n:2,t:"Más volumen",rir:"2 reps en reserva",main:4,cardio:20,lvl:"+1 nivel",rounds:7},
- {n:3,t:"Subir carga",rir:"1–2 reps en reserva",main:4,cardio:20,lvl:"+2 niveles",rounds:8},
- {n:4,t:"La más exigente",rir:"1 rep en reserva",main:4,cardio:20,lvl:"+3 niveles",rounds:8}
+ {n:1,t:"Técnica",rir:"3 reps en reserva",lvl:"ritmo cómodo",iv:0},
+ {n:2,t:"Más carga",rir:"2 reps en reserva",lvl:"+1 nivel de resistencia",iv:0},
+ {n:3,t:"Subir carga",rir:"1–2 reps en reserva",lvl:"intervalos",iv:1},
+ {n:4,t:"La más exigente",rir:"1 rep en reserva",lvl:"intervalos, más fuerte",iv:1}
 ];
 const W=n=>WEEKS[n-1];
-/* n = nombre en portugués (Brasil) · es = nombre en español */
+const TRANS=120, SETW=45, TARGET=55; // cambio de máquina (s), duración de una serie (s), objetivo (min)
+/* n = nombre en portugués · es = español · alt = alternativa si está ocupado */
 const EX={
- remo:{n:"Remada com apoio no peito",es:"Remo con pecho apoyado",mus:"Costas",m:1,r:10,rest:90,v:"IxbCFPv2GyY",
-  tip:"Pecho pegado al banco. Codos hacia atrás y abajo. Hombros lejos de las orejas."},
- pressInc:{n:"Supino inclinado com barra",es:"Press inclinado con barra (banco ~30°)",mus:"Peito superior",m:1,r:8,rest:90,v:"RkveusFgV30",
-  tip:"Omóplatos juntos y abajo. Barra a la parte alta del pecho. Muñeca apilada: barra en la base de la palma, alineada con el antebrazo. Si duele la muñeca (no cansancio), cambiá a mancuernas con agarre neutro."},
- jalon:{n:"Puxada frontal com pegada neutra",es:"Jalón al pecho, agarre neutro",mus:"Costas",m:1,r:10,rest:90,v:"Su1dfZDi0sk",
-  tip:"Pecho arriba. Bajá hasta el mentón sin balancearte. Hombros abajo."},
- cruce:{n:"Crossover de baixo para cima",es:"Cruce de poleas de abajo hacia arriba",mus:"Peito superior",sw:[3,2,2,2],r:12,rest:60,v:"VhrLZ26mch8",
-  tip:"Juntá las manos a la altura del mentón y apretá el centro del pecho 1 s."},
- face:{n:"Face pull na corda",es:"Face pull con cuerda",mus:"Ombro posterior",s:3,r:15,rest:60,v:"tIuXc_X8T4I",
-  tip:"Tirá hacia la cara con los codos altos y abrí las manos hacia afuera. Es postura pura."},
- lat:{n:"Elevação lateral com halteres",es:"Elevaciones laterales con mancuernas",mus:"Ombro lateral",sw:[3,2,2,2],r:12,rest:45,v:"aVa9ce3SlSA",
-  tip:"Subí hasta la altura del hombro, codo apenas flexionado, sin encoger los hombros. Peso liviano."},
- curlA:{n:"Rosca direta com halteres",es:"Curl de bíceps con mancuernas",mus:"Bíceps",ss:1,sw:[3,3,3,3],r:10,rest:0,v:"RsHskJ9k_p0",
-  tip:"Codos pegados al cuerpo, sin balancear. Bajá controlado. Superserie: pasás directo al tríceps."},
- triA:{n:"Tríceps na polia com corda",es:"Tríceps en polea con cuerda",mus:"Tríceps",ss:1,sw:[3,3,3,3],r:12,rest:60,v:"20incKRiLek",
-  tip:"Codos fijos a los costados. Abrí la cuerda al final del movimiento."},
- cardio:{k:"cardio",n:"Cardio contínuo (bike ou trote leve na esteira)",es:"Cardio continuo (bici o trote suave en cinta)",mus:"Fôlego",
-  tip:"Ritmo en el que podés hablar con frases cortas. Bici, o trote suave en la cinta (7–8 km/h). Cada semana subí un nivel de resistencia en la bici o 0,5 km/h en la cinta."},
- rdl:{n:"Levantamento terra romeno (stiff) com barra",es:"Peso muerto rumano con barra",mus:"Lombar",m:1,sw:[3,3,3,3],r:10,rest:90,v:"pCrNlGFo7h4",
-  tip:"Cadera hacia atrás, rodillas apenas flexionadas, espalda neutra, barra pegada a las piernas. Semana 1: liviano para aprender el movimiento."},
- lumbar:{n:"Extensão lombar no banco (hiperextensão)",es:"Extensión lumbar en banco",mus:"Lombar",s:2,r:12,rest:60,v:"atEI-PfmpBI",
-  tip:"Subí hasta quedar en línea recta con el cuerpo, sin arquear de más."},
- gemelo:{n:"Panturrilha em pé",es:"Pantorrillas de pie",mus:"Panturrilha",sw:[2,2,2,2],r:15,rest:60,v:"1BL4681pIz4",
-  tip:"Pausa de 1 s arriba y 1 s abajo estirando. Sin rebotar."},
- prancha:{n:"Prancha frontal",es:"Plancha frontal",mus:"Core",s:2,r:30,u:"s",nokg:1,rest:45,v:"nmX0DysvqcQ",
-  tip:"Antebrazos bajo los hombros, cuerpo recto de la cabeza a los talones. Apretá abdomen y glúteos; no dejes caer la cadera."},
- plankLat:{n:"Prancha lateral",es:"Plancha lateral",mus:"Core",s:2,r:20,u:"s por lado",nokg:1,rest:45,v:"kyOeSuh7LLo",
-  tip:"Cuerpo en línea recta, cadera arriba. Respirá normal."},
- supHal:{n:"Supino reto com halteres",es:"Press plano con mancuernas",mus:"Peito",m:1,r:10,rest:90,v:"W-qU8CF-WeU",
-  tip:"Omóplatos juntos y abajo. Bajá controlado hasta los costados del pecho. Si te molesta la muñeca, girá las palmas para que se miren (agarre neutro)."},
- remoPol:{n:"Remada baixa na polia com pegada neutra",es:"Remo en polea baja, agarre neutro",mus:"Costas",m:1,r:10,rest:90,v:"hiujo_wbkLU",
-  tip:"Torso quieto. Tirá hacia el ombligo y juntá los omóplatos."},
- pecDeck:{n:"Voador (peck deck)",es:"Pec deck o aperturas en polea",mus:"Peito (centro)",s:3,r:12,rest:60,v:"WKfTStqIXrw",
-  tip:"Apretá 1 s con las manos juntas: ese es el centro del pecho que querés llenar."},
- remoUni:{n:"Remada unilateral com halter (serrote)",es:"Remo unilateral con mancuerna",mus:"Costas",sw:[3,2,2,2],r:10,u:"por lado",rest:60,v:"3RTpS2GHo_c",
-  tip:"Codo pegado al cuerpo. No gires el torso."},
- pecInv:{n:"Voador invertido",es:"Pec deck invertido",mus:"Ombro posterior",s:3,r:15,rest:60,v:"kUgxJo-dp6k",
-  tip:"Brazos casi rectos. Abrí sin subir los hombros."},
- curlM:{n:"Rosca martelo com halteres",es:"Curl martillo con mancuernas",mus:"Bíceps",ss:1,sw:[3,3,3,3],r:10,rest:0,v:"mPvlpDWIoDA",
-  tip:"Palmas enfrentadas, codos pegados. Superserie: pasás directo al tríceps."},
- triV:{n:"Tríceps na polia com barra V",es:"Tríceps en polea con barra V",mus:"Tríceps",ss:1,sw:[3,3,3,3],r:12,rest:60,v:"bjOKed5Q-YQ",
-  tip:"Codos fijos a los costados. Extendé completo y controlá la subida."},
- inter:{k:"inter",n:"Intervalado na bike",es:"Intervalos en bici",mus:"Fôlego",
-  tip:"El «fuerte» es casi todo lo que podés dar. Los 90 s suaves son para recuperar de verdad."},
- yt:{n:"Elevação Y-T no banco inclinado (de bruços)",es:"Y-T en banco inclinado, boca abajo",mus:"Costas altas",s:2,r:10,u:"Y + 10 T",rest:60,v:"KSsY6zGJuzA",
-  tip:"Peso muy liviano (1–2,5 kg). Primero 10 en «Y» como en el video, después 10 con los brazos abiertos en «T». Pulgares arriba, sin encoger hombros."},
- crucInc:{n:"Crucifixo inclinado com halteres",es:"Aperturas inclinadas con mancuernas",mus:"Peito superior",s:3,r:12,rest:60,v:"xaV9Kne7LS8",
-  tip:"Banco a ~30°. Codos apenas flexionados. Bajá hasta sentir el estiramiento en el pecho, sin pasar la línea del hombro, y subí juntando las manos arriba del pecho."},
- curlAlt:{n:"Rosca alternada com halteres",es:"Curl alterno con mancuernas",mus:"Bíceps",ss:1,sw:[3,3,3,3],r:10,u:"por brazo",rest:0,v:"b-DeZccsPSY",
-  tip:"Un brazo por vez, girando la palma hacia arriba al subir. Codo quieto. Superserie: pasás directo al tríceps."},
- triFr:{n:"Tríceps francês com halter",es:"Extensión de tríceps sobre la cabeza con mancuerna",mus:"Tríceps",ss:1,sw:[3,3,3,3],r:12,rest:60,v:"PyNaiTP1PIA",
-  tip:"Sentado con respaldo, mancuerna con las dos manos detrás de la cabeza. Codos apuntando arriba y quietos; extendé completo."},
- pullover:{n:"Pullover na polia (braços estendidos)",es:"Pullover en polea alta, brazos rectos",mus:"Costas",sw:[3,2,2,2],r:12,rest:60,v:"dTbh56xxX-g",
-  tip:"Brazos casi rectos, inclinado un poco hacia adelante. Llevá la barra desde arriba hasta los muslos usando la espalda, sin doblar los codos. Hombros abajo."},
+ jalon:{n:"Puxada frontal com pegada neutra",es:"Jalón al pecho, agarre neutro",mus:"Costas",s:4,r:10,rest:75,v:"Su1dfZDi0sk",
+  tip:"Pecho arriba. Bajá hasta el mentón sin balancearte. Hombros abajo, lejos de las orejas.",
+  alt:{n:"Puxada aberta na polia",es:"Jalón al pecho, agarre abierto"}},
+ remo:{n:"Remada com apoio no peito",es:"Remo con pecho apoyado",mus:"Costas",s:4,r:10,rest:75,v:"IxbCFPv2GyY",
+  tip:"Pecho pegado al banco. Codos hacia atrás y abajo. Juntá los omóplatos al final.",
+  alt:{n:"Remada curvada com halteres",es:"Remo inclinado con mancuernas"}},
+ face:{n:"Face pull na corda",es:"Face pull con cuerda",mus:"Ombro posterior",s:3,r:15,rest:45,v:"tIuXc_X8T4I",
+  tip:"Tirá hacia la cara con los codos altos y abrí las manos hacia afuera. Es postura pura.",
+  alt:{n:"Crucifixo inverso com halteres",es:"Pájaros con mancuernas"}},
+ curl:{n:"Rosca direta com halteres",es:"Curl de bíceps con mancuernas",mus:"Bíceps",s:3,r:10,rest:45,v:"RsHskJ9k_p0",
+  tip:"Codos pegados al cuerpo, sin balancear. Bajá controlado.",
+  alt:{n:"Rosca direta com barra",es:"Curl con barra"}},
+ martelo:{n:"Rosca martelo com halteres",es:"Curl martillo con mancuernas",mus:"Bíceps",s:3,r:12,rest:45,v:"mPvlpDWIoDA",
+  tip:"Palmas enfrentadas, codos quietos. Subí sin girar el torso.",
+  alt:{n:"Rosca martelo na polia com corda",es:"Curl martillo en polea con cuerda"}},
+ pressInc:{n:"Supino inclinado com barra",es:"Press inclinado con barra",mus:"Peito superior",s:4,r:8,rest:75,v:"RkveusFgV30",
+  tip:"Banco a ~30°. Omóplatos juntos y abajo. Barra a la parte alta del pecho. Muñeca apilada sobre el antebrazo; si duele, pasá a la alternativa.",
+  alt:{n:"Supino inclinado com halteres",es:"Press inclinado con mancuernas",v:"oTD5g77GgSA"}},
+ supHal:{n:"Supino reto com halteres",es:"Press plano con mancuernas",mus:"Peito",s:4,r:10,rest:75,v:"W-qU8CF-WeU",
+  tip:"Omóplatos juntos y abajo. Bajá controlado a los costados del pecho. Si molesta la muñeca, palmas enfrentadas.",
+  alt:{n:"Supino reto com barra",es:"Press de banca con barra"}},
+ cruce:{n:"Crossover de baixo para cima",es:"Cruce de poleas de abajo hacia arriba",mus:"Peito (centro e alto)",s:3,r:12,rest:45,v:"VhrLZ26mch8",
+  tip:"Juntá las manos a la altura del mentón y apretá el centro del pecho 1 s.",
+  alt:{n:"Crucifixo inclinado com halteres",es:"Aperturas inclinadas con mancuernas",v:"xaV9Kne7LS8"}},
+ triCorda:{n:"Tríceps na polia com corda",es:"Tríceps en polea con cuerda",mus:"Tríceps",s:3,r:12,rest:45,v:"20incKRiLek",
+  tip:"Codos fijos a los costados. Abrí la cuerda al final.",
+  alt:{n:"Tríceps na polia com barra V",es:"Tríceps en polea con barra V",v:"bjOKed5Q-YQ"}},
+ triFr:{n:"Tríceps francês com halter",es:"Extensión de tríceps sobre la cabeza",mus:"Tríceps",s:3,r:12,rest:45,v:"PyNaiTP1PIA",
+  tip:"Sentado con respaldo, mancuerna con las dos manos detrás de la cabeza. Codos arriba y quietos.",
+  alt:{n:"Tríceps francês na polia",es:"Extensión de tríceps sobre la cabeza en polea"}},
+ cardio:{k:"cardio",n:"Cardio (bike ou trote leve)",es:"Cardio en bici o trote suave",mus:"Fôlego",mins:20,
+  tip:"Ritmo en el que podés hablar con frases cortas. En las semanas 3 y 4 hay intervalos: la web te avisa con pitidos cuándo ir fuerte y cuándo suave.",
+  alt:{n:"Esteira ou bike (a que estiver livre)",es:"Cinta o bici, la que esté libre"}},
+ lumbar:{n:"Extensão lombar no banco",es:"Extensión lumbar en banco",mus:"Lombar",s:3,r:12,rest:45,v:"atEI-PfmpBI",
+  tip:"Subí hasta quedar en línea recta con el cuerpo, sin arquear de más. Es para que la espalda aguante la postura.",
+  alt:{n:"Stiff com halteres (leve)",es:"Peso muerto rumano liviano con mancuernas",v:"pCrNlGFo7h4"}},
+ abdPol:{n:"Abdominal na polia alta (crunch)",es:"Crunch en polea alta",mus:"Abdômen",s:3,r:12,rest:45,v:"ui3iEsYbXtI",
+  tip:"De rodillas, cuerda a los costados de la cabeza. Enrollá el tronco llevando el pecho hacia la cadera; la cadera no se mueve.",
+  alt:{n:"Abdominal na máquina",es:"Abdominal en máquina"}},
+ gemelo:{n:"Panturrilha em pé",es:"Pantorrillas de pie",mus:"Panturrilha",s:3,r:15,rest:45,v:"1BL4681pIz4",
+  tip:"Pausa de 1 s arriba y 1 s abajo estirando. Sin rebotar.",
+  alt:{n:"Panturrilha no leg press",es:"Pantorrillas en prensa"}},
+ supIncHal:{n:"Supino inclinado com halteres",es:"Press inclinado con mancuernas",mus:"Peito superior",s:3,r:10,rest:75,v:"oTD5g77GgSA",
+  tip:"Banco a ~30°. Bajá controlado hasta los costados del pecho y subí juntando un poco las mancuernas.",
+  alt:{n:"Supino inclinado na máquina",es:"Press inclinado en máquina"}},
+ remoUni:{n:"Remada unilateral com halter (serrote)",es:"Remo unilateral con mancuerna",mus:"Costas",s:4,r:10,u:"por lado",rest:75,v:"3RTpS2GHo_c",
+  tip:"Codo pegado al cuerpo, sin girar el torso. Llevá la mancuerna hacia la cadera.",
+  alt:{n:"Remada baixa na polia",es:"Remo en polea baja",v:"hiujo_wbkLU"}},
+ desenv:{n:"Desenvolvimento com halteres sentado",es:"Press de hombros con mancuernas",mus:"Ombros",s:3,r:10,rest:75,v:"bTqxQNOxhXE",
+  tip:"Espalda apoyada. Subí sin encoger los hombros y bajá hasta la altura de las orejas.",
+  alt:{n:"Desenvolvimento na máquina",es:"Press de hombros en máquina"}},
+ lat:{n:"Elevação lateral com halteres",es:"Elevaciones laterales",mus:"Ombro lateral",s:4,r:12,rest:45,v:"aVa9ce3SlSA",
+  tip:"Subí hasta la altura del hombro, codo apenas flexionado, sin encoger. Peso liviano.",
+  alt:{n:"Elevação lateral na polia",es:"Elevación lateral en polea"}},
+ yt:{n:"Elevação Y-T no banco inclinado",es:"Y-T boca abajo en banco inclinado",mus:"Costas altas",s:3,r:10,u:"Y + 10 T",rest:45,v:"KSsY6zGJuzA",
+  tip:"Peso muy liviano (1–2,5 kg). 10 con los brazos en «Y» y 10 abiertos en «T». Pulgares arriba, sin encoger.",
+  alt:{n:"Face pull na corda",es:"Face pull con cuerda",v:"tIuXc_X8T4I"}}
 };
-/* Calentamiento y estiramientos: secs = tiempo de cada tramo; sides = lados; reps = veces */
+/* calentamiento y estiramientos: secs = tiempo por lado (si no tiene, es por repeticiones) */
 const WU=[
- {n:"Série leve de aproximação",es:"Serie liviana de aproximación",dose:"1 × 12, poco peso",v:"",tip:"Con poco peso, del primer ejercicio del día. En días de cardio: arrancá el cardio suave."},
- {n:"Retração do queixo na parede (chin tuck)",es:"Retracción de mentón contra la pared",dose:"10 reps",v:"TWzly9Xswt8",tip:"De pie, espalda y nuca contra la pared. Llevá el mentón hacia atrás como haciendo papada, sin levantar la cara. 2 s y soltá."},
- {n:"Deslizamento na parede (wall slide)",es:"Wall slides",dose:"10 reps",v:"eo0MhjA40hc",tip:"Espalda y brazos pegados a la pared al subir."},
- {n:"Abertura com elástico (band pull-apart)",es:"Band pull-apart",dose:"15 reps",v:"NqWQ9n6XDCk",tip:"Juntá los omóplatos, hombros abajo. Sirve una polea liviana."},
- {n:"Extensão torácica no rolo ou banco",es:"Extensión torácica sobre rodillo",dose:"8 reps",v:"_67IyHPxCnQ",tip:"Arqueá solo la espalda alta, no la lumbar."}
+ {n:"Alongamento de peitoral no poste",es:"Pecho apoyado en un poste del rack o máquina",secs:20,sides:2,v:"EAVXZ3a10BI",tip:"Antebrazo apoyado en un poste, codo a la altura del hombro. Girá el cuerpo suave hacia el otro lado."},
+ {n:"Alongamento lateral do pescoço",es:"Cuello de costado",secs:20,sides:2,v:"3LIhdRvaUSU",tip:"Oreja hacia el hombro, suave. Afloja los hombros levantados."},
+ {n:"Retração do queixo em pé",es:"Chin tuck de pie",dose:"10 reps",v:"CKUQMxK8-bw",tip:"De pie y derecho. Llevá el mentón hacia atrás como haciendo papada, sin bajar la cara. 2 s y soltá."},
+ {n:"Retração escapular em pé (W)",es:"Juntar omóplatos de pie",dose:"12 reps",v:"Ka9lgLZMD1E",tip:"Brazos en «W», codos doblados. Juntá los omóplatos llevándolos hacia atrás y abajo, 2 s y soltá."},
+ {n:"Extensão torácica sentado no banco",es:"Extensión de espalda alta sentado",dose:"8 reps",v:"9yTitpOSzNo",tip:"Sentado en un banco con respaldo, manos en la nuca. Arqueá solo la espalda alta hacia atrás y volvé."}
 ];
 const STR={
- pec:{n:"Alongamento de peitoral na porta",es:"Pecho en marco de puerta",secs:30,sides:2,reps:1,v:"1zduQK7PCBI",vv:1,tip:"Antebrazo en el marco, codo a la altura del hombro. Girá el cuerpo suave."},
- trapS:{n:"Alongamento lateral do pescoço (trapézio)",es:"Cuello de costado",secs:30,sides:2,reps:1,v:"3LIhdRvaUSU",tip:"Oreja hacia el hombro, la otra mano abajo. Sin forzar con la mano."},
- elev:{n:"Alongamento do levantador da escápula",es:"Cuello atrás y al costado",secs:30,sides:2,reps:1,v:"oG7IrloR7Fo",tip:"Mirá hacia la axila, mano apoyada suave sobre la cabeza. Acá se contractura la gente sentada."},
- cuelloAnt:{n:"Alongamento da frente do pescoço",es:"Cuello adelante (lo de la fisio)",secs:20,sides:2,reps:2,v:"NFq7rZsJXx8",vv:1,tip:"SUAVE. Mano en la clavícula, mirá en diagonal hacia arriba. Sin dolor. Mareo u hormigueo: pará y consultá con tu fisio."},
- flex:{n:"Alongamento do flexor do quadril",es:"Flexor de cadera en estocada",secs:40,sides:2,reps:1,v:"6i7CZCqErRs",tip:"Glúteo apretado y costillas abajo. Compensa las horas sentado."},
- dorsal:{n:"Alongamento do dorsal na polia",es:"Dorsal colgado de la polea",secs:30,sides:2,reps:1,v:"K7PMPSjthVI",tip:"Agarrate y llevá la cadera hacia atrás, dejando caer el pecho."},
- gem:{n:"Alongamento de panturrilha na parede",es:"Pantorrilla en la pared",secs:30,sides:2,reps:1,v:"1JEgLZ9NHf8",vv:1,tip:"Talón apoyado, pierna de atrás estirada."}
+ pec:{n:"Alongamento de peitoral no poste",es:"Pecho apoyado en un poste",secs:30,sides:2,v:"EAVXZ3a10BI",tip:"Antebrazo en el poste, codo a la altura del hombro. Girá el cuerpo suave."},
+ elev:{n:"Alongamento do levantador da escápula",es:"Cuello hacia la axila",secs:30,sides:2,v:"oG7IrloR7Fo",tip:"Mirá hacia la axila y apoyá la mano suave sobre la cabeza. Acá se contractura la gente que pasa sentada."},
+ cuello:{n:"Alongamento da frente do pescoço",es:"Cuello adelante (lo de la fisio)",secs:20,sides:2,reps:2,v:"NFq7rZsJXx8",vv:1,tip:"SUAVE. Mano en la clavícula, mirá en diagonal hacia arriba. Mareo u hormigueo: pará y consultá a tu fisio."},
+ flex:{n:"Alongamento do flexor do quadril (em pé)",es:"Flexor de cadera en zancada, de pie",secs:30,sides:2,v:"txmtEinYEQE",tip:"Paso largo adelante, glúteo de la pierna de atrás apretado. Compensa las horas sentado."},
+ dorsal:{n:"Alongamento do dorsal na polia",es:"Dorsal colgado de la polea",secs:30,sides:2,v:"K7PMPSjthVI",tip:"Agarrate y llevá la cadera hacia atrás, dejando caer el pecho."},
+ tri:{n:"Alongamento de tríceps",es:"Tríceps con el brazo detrás de la cabeza",secs:30,sides:2,v:"oMwZKNy4vA8",tip:"Mano a la espalda por detrás de la cabeza; con la otra mano empujá suave el codo."},
+ gem:{n:"Alongamento de panturrilha no degrau",es:"Pantorrilla en un escalón o disco",secs:30,sides:2,v:"fn1_NOnO1D0",tip:"Punta del pie sobre el escalón o un disco, bajá el talón despacio."},
+ ombro:{n:"Alongamento de ombro posterior",es:"Hombro con el brazo cruzado",secs:30,sides:2,v:"3mcva7Qn-hc",tip:"Cruzá el brazo por delante del pecho y acercalo con la otra mano. Hombro abajo."}
 };
+const DAYS=[
+ {id:1,dia:"Martes",ab:"Mar",t:"Espalda + bíceps",foco:"Costas · bíceps · postura",ex:["jalon","remo","face","curl","martelo"],str:["pec","elev","cuello","flex","dorsal"]},
+ {id:2,dia:"Miércoles",ab:"Mié",t:"Pecho + tríceps",foco:"Peito · tríceps",ex:["pressInc","supHal","cruce","triCorda","triFr"],str:["pec","elev","cuello","flex","tri"]},
+ {id:3,dia:"Jueves",ab:"Jue",t:"Cardio + abdomen",foco:"Fôlego · abdômen · lombar · panturrilha",ex:["cardio","lumbar","abdPol","gemelo"],str:["pec","elev","cuello","flex","gem"]},
+ {id:4,dia:"Viernes",ab:"Vie",t:"Hombro + postura",foco:"Ombros · peito alto · costas",ex:["supIncHal","remoUni","desenv","lat","yt"],str:["pec","elev","cuello","flex","ombro"]}
+];
 const DESK=[
  {n:"Retração do queixo",dose:"10 reps",v:"CKUQMxK8-bw",tip:"Llevá la cabeza hacia atrás, como haciendo papada."},
  {n:"Abrir o peito",dose:"20 s",v:"VXyFRWTRIYg",tip:"Manos entrelazadas atrás, juntá omóplatos."},
  {n:"Alongamento do trapézio",dose:"20 s por lado",v:"3LIhdRvaUSU",tip:"Oreja hacia el hombro, mano opuesta abajo."},
  {n:"Extensão torácica na cadeira",dose:"8 reps",v:"4ZqOMX-18O0",tip:"Manos en la nuca, arqueá la espalda alta sobre el respaldo."},
- {n:"Flexor do quadril em pé",dose:"20 s por lado",v:"6i7CZCqErRs",tip:"Paso largo adelante, glúteo apretado."}
+ {n:"Flexor do quadril em pé",dose:"20 s por lado",v:"txmtEinYEQE",tip:"Paso largo adelante, glúteo apretado."}
 ];
-const DAYS=[
- {id:1,dia:"Martes",ab:"Mar",t:"Torso A",foco:"Espalda · pecho alto · brazos",ex:["remo","pressInc","jalon","cruce","face","lat","curlA","triA"],str:["pec","elev","cuelloAnt","flex","dorsal"]},
- {id:2,dia:"Miércoles",ab:"Mié",t:"Cardio + espalda baja",foco:"Aire · lumbar · core",ex:["cardio","rdl","lumbar","gemelo","prancha","plankLat"],str:["pec","elev","cuelloAnt","flex","dorsal","gem"]},
- {id:3,dia:"Jueves",ab:"Jue",t:"Torso B",foco:"Pecho centro · espalda · brazos",ex:["supHal","remoPol","pecDeck","remoUni","pecInv","lat","curlM","triV"],str:["pec","elev","cuelloAnt","flex","dorsal"]},
- {id:4,dia:"Viernes",ab:"Vie",t:"Postura, pecho + intervalos",foco:"Aire · postura · pecho · espalda · brazos",ex:["inter","yt","face","crucInc","curlAlt","triFr","pullover"],str:["pec","elev","cuelloAnt","flex","dorsal"]}
-];
-const TRANS=45; // s para cambiar de ejercicio
 
-/* ============ ESTADO ============ */
-const KEY="gymplan_oct2026_v2", RKEY="gymplan_run_v3", SKEY="gymplan_snd";
+/* ================= ESTADO ================= */
+const KEY="gymplan_oct2026_v2", RKEY="gymplan_run_v4", SKEY="gymplan_snd";
 const blank=()=>({log:{},chk:{},ses:{},desk:{},unit:{}});
 function norm(o){o=o&&typeof o==="object"?o:{};o.log=o.log||{};o.chk=o.chk||{};o.ses=o.ses||{};o.desk=o.desk||{};o.unit=o.unit||{};return o}
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
@@ -386,24 +425,20 @@ let remoteSave=null, user=null, authState="loading", authMsg="";
 function save(){lsSet(KEY,JSON.stringify(S));if(remoteSave)remoteSave(S)}
 function saveR(){if(R)lsSet(RKEY,JSON.stringify(R));else lsDel(RKEY)}
 
-/* ============ HELPERS ============ */
+/* ================= HELPERS ================= */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const k=(w,d,id)=>w+"."+d+"."+id;
-const setsOf=(e,w)=>e.sw?e.sw[w-1]:(e.m?W(w).main:e.s);
 const repTxt=e=>e.r+(e.u?" "+e.u:" reps");
-const restTxt=e=>e.rest?e.rest+" s":"directo";
 const thumb=v=>"https://i.ytimg.com/vi/"+v+"/mqdefault.jpg";
 const ytUrl=v=>"https://www.youtube.com/watch?v="+v;
+const ytSearch=q=>"https://www.youtube.com/results?search_query="+encodeURIComponent(q);
 function dayDate(w,d){const x=new Date(START);x.setDate(x.getDate()+(w-1)*7+(d-1));return x}
 const fdate=x=>x.getDate()+" "+MES[x.getMonth()];
+const fdl=x=>x.getDate()+" de "+MESL[x.getMonth()];
 function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
 function todayPlan(){const t=new Date();for(let w=1;w<=4;w++)for(let d=1;d<=4;d++)if(sameDay(dayDate(w,d),t))return{w,d};return null}
 function nextPlan(){const t=new Date();t.setHours(0,0,0,0);for(let w=1;w<=4;w++)for(let d=1;d<=4;d++)if(dayDate(w,d)>=t)return{w,d};return{w:4,d:4}}
-const itemsOf=d=>["warm",...DAYS[d-1].ex,"str"];
-function prog(w,d){const it=itemsOf(d);let n=0;it.forEach(id=>{if(S.chk[k(w,d,id)])n++});return[n,it.length]}
-function weekProg(w){let a=0,b=0;DAYS.forEach(D=>{const p=prog(w,D.id);a+=p[0];b+=p[1]});return[a,b]}
-const pct=p=>Math.round(p[0]/p[1]*100);
 function today(){const t=new Date();return t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0")}
 function mmss(ms){ms=Math.max(0,ms);const s=Math.ceil(ms/1000);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
 function hms(ms){ms=Math.max(0,ms);const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60);return(h?h+":"+String(m).padStart(2,"0"):String(m).padStart(2,"0"))+":"+String(s%60).padStart(2,"0")}
@@ -413,24 +448,28 @@ const wtxt=s=>s&&s.kg?s.kg+" "+(s.u||"kg"):"";
 const toKg=s=>(num(s.kg)||0)*((s.u||"kg")==="lb"?0.4536:1);
 function lastFor(w,d,id,i){for(let p=w-1;p>=1;p--){const L=S.log[k(p,d,id)];if(L&&L.sets&&L.sets.length){const s=L.sets[i]||L.sets[L.sets.length-1];if(s&&(s.kg||s.reps))return{w:p,kg:s.kg,u:s.u||"kg",reps:s.reps}}}return null}
 function prevSummary(w,d,id){for(let p=w-1;p>=1;p--){const L=S.log[k(p,d,id)];if(L&&L.sets){const s=L.sets.filter(x=>x&&(x.kg||x.reps)).map(x=>(x.kg?wtxt(x)+" × ":"")+(x.reps||"?"));if(s.length)return"Semana "+p+": "+s.join(" · ")}if(L&&L.note)return"Semana "+p+": "+L.note}return""}
-function cardioSpec(e,w){return e.k==="cardio"?W(w).cardio+" min · "+W(w).lvl:W(w).rounds+" × 30 s fuerte / 90 s suave"}
-/* duración estimada del día (min): series ~40 s, descansos, 45 s de cambio, guiados */
-function workSecs(e){if(e.u&&e.u.indexOf("s por")===0)return e.r*2+15;if(e.u==="s")return e.r+15;if(e.u)return 60;return 40}
-function warmList(d){return[
- {n:"Alongamento de peitoral na porta",es:"Pecho en marco de puerta (corto, antes de entrenar)",secs:20,sides:2,reps:1,v:STR.pec.v,vv:1,tip:"Suave, sin forzar. Solo para abrir el pecho antes de entrenar."},
- {n:"Alongamento lateral do pescoço (trapézio)",es:"Cuello de costado (corto, antes de entrenar)",secs:20,sides:2,reps:1,v:STR.trapS.v,tip:"Oreja hacia el hombro, suave. Afloja los hombros levantados antes de empezar."}
-].concat(WU.slice(1))}
-function guided(kind,d){const list=kind==="warm"?warmList(d):DAYS[d-1].str.map(s=>STR[s]);const b=[];list.forEach(x=>{if(!x.secs){b.push({x,side:-1,rep:0});return}for(let r=0;r<(x.reps||1);r++)for(let sd=0;sd<(x.sides||1);sd++)b.push({x,side:(x.sides||1)>1?sd:-1,rep:r})});return b}
-function guidedSecs(kind,d){return guided(kind,d).reduce((a,x)=>a+(x.x.secs?x.x.secs+8:45),0)} // manual ~45 s; con tiempo: tiempo + 8 s para acomodarse
-function estDay(w,d){let t=guidedSecs("warm",d)+guidedSecs("str",d);const ex=DAYS[d-1].ex;
- for(let i=0;i<ex.length;i++){const e=EX[ex[i]];
-  if(e.ss){const b=EX[ex[i+1]],n=setsOf(e,w);t+=n*(workSecs(e)+workSecs(b))+(n-1)*b.rest+TRANS;i++;continue}
-  if(e.k==="cardio"){t+=W(w).cardio*60+TRANS;continue}
-  if(e.k==="inter"){t+=W(w).rounds*120+TRANS;continue}
-  const n=setsOf(e,w);t+=n*workSecs(e)+(n-1)*e.rest+TRANS}
- return Math.round(t/60)}
 
-/* ============ AUDIO / VIBRA / PANTALLA ============ */
+/* ---- pasos del día: cada calentamiento, ejercicio y estiramiento es un paso propio ---- */
+function stepsOf(d){const D=DAYS[d-1],o=[];
+ WU.forEach((x,i)=>o.push({t:"g",g:"w",key:"wu"+i,x}));
+ D.ex.forEach(id=>o.push({t:EX[id].k?"cardio":"ex",key:id,id}));
+ D.str.forEach((s,i)=>o.push({t:"g",g:"s",key:"st"+i,x:STR[s]}));
+ return o}
+const itemsOf=d=>stepsOf(d).map(s=>s.key);
+function bouts(x){if(!x.secs)return[{side:-1,rep:0}];const b=[];for(let r=0;r<(x.reps||1);r++)for(let sd=0;sd<(x.sides||1);sd++)b.push({side:(x.sides||1)>1?sd:-1,rep:r});return b}
+function prog(w,d){const it=itemsOf(d);let n=0;it.forEach(id=>{if(S.chk[k(w,d,id)])n++});return[n,it.length]}
+function weekProg(w){let a=0,b=0;DAYS.forEach(D=>{const p=prog(w,D.id);a+=p[0];b+=p[1]});return[a,b]}
+const pct=p=>Math.round(p[0]/p[1]*100);
+function workSecs(e){if(e.u&&e.u.indexOf("Y")===0)return 60;if(e.u==="por lado")return 60;return SETW}
+function gSecs(x){return x.secs?bouts(x).length*(x.secs+8):45}
+function exSecs(e,fromSet){const n=e.s-(fromSet||0);if(n<=0)return 0;return n*workSecs(e)+(n-1)*e.rest}
+function stepSecs(st){if(st.t==="g")return gSecs(st.x);const e=EX[st.id];return(st.t==="cardio"?e.mins*60:exSecs(e))+TRANS}
+function estDay(w,d){return Math.round(stepsOf(d).reduce((a,s)=>a+stepSecs(s),0)/60)}
+function cardioSegs(w){if(!W(w).iv)return[{s:1200,f:0,l:"Ritmo constante"}];
+ const a=[{s:300,f:0,l:"Entrada en calor suave"}];for(let i=0;i<6;i++){a.push({s:30,f:1,l:"FUERTE",r:i+1});a.push({s:90,f:0,l:"Suave",r:i+1})}a.push({s:180,f:0,l:"Vuelta a la calma"});return a}
+function cardioSpec(w){return W(w).iv?"20 min con 6 intervalos de 30 s":"20 min · "+W(w).lvl}
+
+/* ================= AUDIO / PANTALLA ================= */
 let AC=null,wake=null;
 function unlockAudio(){try{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume()}catch(e){}}
 function beep(n,f){if(navigator.vibrate)try{navigator.vibrate(n>1?[200,100,200,100,200].slice(0,n*2-1):220)}catch(e){}
@@ -439,16 +478,17 @@ async function keepAwake(){try{if("wakeLock" in navigator&&!wake){wake=await nav
 function releaseWake(){try{if(wake)wake.release()}catch(e){}wake=null}
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&R&&!R.pA&&R.ph!=="done")keepAwake()});
 
-/* ============ VIDEO ============ */
-function vplayer(v,vv){if(!v)return"";
+/* ================= VIDEO ================= */
+function vplayer(v,vv,q){
+ if(!v)return q?'<a class="btn o big" target="_blank" rel="noopener" href="'+ytSearch(q)+'">▶ Buscar video en YouTube</a>':"";
  return '<div class="vbox '+(vv?"v":"")+'" data-act="play" data-id="'+v+'"><img src="https://i.ytimg.com/vi/'+v+'/hqdefault.jpg" alt=""><span class="pl">▶</span></div>'+
   '<div class="ytl"><a target="_blank" rel="noopener" href="'+ytUrl(v)+'">Abrir en YouTube ↗</a></div>'}
 function playIn(box){const id=box.dataset.id;
- if(location.protocol==="file:"){window.open(ytUrl(id),"_blank");return} // abierto como archivo: YouTube no deja incrustar
+ if(location.protocol==="file:"){window.open(ytUrl(id),"_blank");return}
  box.removeAttribute("data-act");
  box.innerHTML='<iframe src="https://www.youtube.com/embed/'+id+'?autoplay=1&playsinline=1&rel=0" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Video"></iframe>'}
 
-/* ============ MENÚ ============ */
+/* ================= MENÚ ================= */
 let V={view:"plan",w:1,d:0};
 (()=>{const t=todayPlan()||nextPlan();V.w=t.w})();
 function acctHtml(){
@@ -468,8 +508,6 @@ function renderApp(){
 }
 function onScroll(){const l=$(".loc");if(l)l.classList.toggle("sh",window.scrollY>4)}
 window.addEventListener("scroll",onScroll,{passive:true});
-const MESL=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
-const fdl=x=>x.getDate()+" de "+MESL[x.getMonth()];
 function planView(){
  const w=V.w,tp=todayPlan();
  let h='';
@@ -477,62 +515,66 @@ function planView(){
  h+='<div class="loc"><div class="seg">'+WEEKS.map(x=>{const pc=pct(weekProg(x.n));
   return '<button class="'+(V.w===x.n?"on ":"")+(tp&&tp.w===x.n?"today":"")+'" data-act="w" data-v="'+x.n+'"><b>Semana '+x.n+(pc===100?" ✓":"")+'</b><small>'+dayDate(x.n,1).getDate()+'–'+fdate(dayDate(x.n,4))+'</small></button>'}).join("")+'</div>';
  if(V.d)h+='<div class="seg">'+DAYS.map(D=>{const p=prog(w,D.id),dt=dayDate(w,D.id);
-  return '<button class="'+(V.d===D.id?"on ":"")+(sameDay(dt,new Date())?"today":"")+'" data-act="d" data-v="'+D.id+'"><b>'+D.ab+' '+dt.getDate()+(p[0]===p[1]?" ✓":"")+'</b><small>Día '+D.id+'</small></button>'}).join("")+'</div>';
+  return '<button class="'+(V.d===D.id?"on ":"")+(sameDay(dt,new Date())?"today":"")+'" data-act="d" data-v="'+D.id+'"><b>'+D.ab+' '+dt.getDate()+(p[0]===p[1]?" ✓":"")+'</b><small>'+esc(D.t.split(" ")[0])+'</small></button>'}).join("")+'</div>';
  h+='</div>';
  if(!V.d){
   h+='<div class="wsub">'+esc(W(w).t)+' · '+esc(W(w).rir)+'</div><div class="dlist">';
   DAYS.forEach(D=>{const p=prog(w,D.id),dt=dayDate(w,D.id),isT=sameDay(dt,new Date()),done=p[0]===p[1];
    h+='<button class="drow'+(isT?" today":"")+(done?" done":"")+'" data-act="d" data-v="'+D.id+'"><span class="dt"><small>'+D.ab+'</small><b>'+dt.getDate()+'</b></span>'+
-    '<span><span class="tt">'+esc(D.t)+'</span><span class="ss">'+(isT?'<i class="hoy">Hoy</i> ':'')+esc(D.foco)+'</span></span><span class="rr">'+(done?"✓":estDay(w,D.id)+" min")+'</span></button>'});
+    '<span><span class="tt">'+esc(D.t)+'</span><span class="ss">'+(isT?'<i class="hoy">Hoy</i> ':'')+esc(D.foco)+'</span></span><span class="rr">'+(done?"✓":(p[0]?p[0]+"/"+p[1]:"≈"+estDay(w,D.id)+" min"))+'</span></button>'});
   return h+'</div>';
  }
  return h+dayView();
 }
-function setDots(w,d,id){const e=EX[id],L=S.log[k(w,d,id)]||{},n=setsOf(e,w);let s='<span class="sd">';for(let i=0;i<n;i++){const x=(L.sets&&L.sets[i])||{};s+='<i class="'+(x.done||x.reps?"d":"")+'"></i>'}return s+'</span>'}
+function setDots(w,d,id){const e=EX[id],L=S.log[k(w,d,id)]||{};let s='<span class="sd">';for(let i=0;i<e.s;i++){const x=(L.sets&&L.sets[i])||{};s+='<i class="'+(x.done?"d":"")+'"></i>'}return s+'</span>'}
+const KIND={w:{c:"var(--warm)",l:"Calentamiento",ic:"🔥"},ex:{c:"var(--acc)",l:"Ejercicio",ic:"🏋️"},cardio:{c:"var(--cardio)",l:"Cardio",ic:"🏃"},s:{c:"var(--str)",l:"Estiramiento",ic:"🧘"}};
+const kindOf=st=>st.t==="g"?st.g:st.t;
+function gDose(x){return x.secs?((x.reps>1?x.reps+" × ":"")+x.secs+" s"+(x.sides>1?" por lado":"")):x.dose}
 function dayView(){
- const w=V.w,d=V.d,D=DAYS[d-1],dt=dayDate(w,d);
- let h='<div class="dh"><small>'+D.dia+' '+fdl(dt)+' · ≈'+estDay(w,d)+' min</small><h2>'+esc(D.t)+'</h2><div class="m">'+esc(D.foco)+'</div></div>';
+ const w=V.w,d=V.d,D=DAYS[d-1],dt=dayDate(w,d),steps=stepsOf(d);
+ let h='<div class="dh"><small>'+D.dia+' '+fdl(dt)+' · ≈'+estDay(w,d)+' min · '+steps.length+' pasos</small><h2>'+esc(D.t)+'</h2><div class="m">'+esc(W(w).rir)+'</div></div>';
  h+=(R&&R.ph!=="done")?'':'<button class="btn big" data-act="start" data-w="'+w+'" data-d="'+d+'">▶ Iniciar entrenamiento</button>';
- const row=(act,attr,thumbHtml,title,sub,done)=>'<button class="xrow'+(done?" ok":"")+'" data-act="'+act+'"'+attr+'>'+thumbHtml+'<span class="xt"><span class="tt">'+title+'</span><span class="ss">'+sub+'</span></span><span class="chev">'+(done?"✓":"›")+'</span></button>';
- h+='<div class="xlist">';
- h+=row("warminfo","",'<span class="ico">🔥</span>',"Aquecimento",warmList(d).length+' ejercicios · '+Math.round(guidedSecs("warm",d)/60)+' min',!!S.chk[k(w,d,"warm")]);
- D.ex.forEach((id,i)=>{const e=EX[id];
-  const sub=e.k?'<b>'+esc(cardioSpec(e,w))+'</b>':'<b>'+setsOf(e,w)+' × '+esc(repTxt(e))+'</b> · '+restTxt(e)+(e.ss?' · 🔗':'')+setDots(w,d,id);
-  const th=e.v?'<span class="th"><img loading="lazy" src="'+thumb(e.v)+'" alt=""><b>▶</b></span>':'<span class="ico">'+(e.k==="inter"?"🚴":"🏃")+'</span>';
-  h+=row("exinfo",' data-id="'+id+'"',th,esc(e.n),sub,!!S.chk[k(w,d,id)])});
- h+=row("strinfo","",'<span class="ico">🧘</span>',"Alongamento final",D.str.length+' estiramientos · '+Math.round(guidedSecs("str",d)/60)+' min',!!S.chk[k(w,d,"str")]);
- return h+'</div><button class="linkbtn" data-act="rules">Reglas del plan</button>';
+ const groups=[["w","Calentamiento",steps.filter(s=>s.g==="w")],["ex","Entrenamiento",steps.filter(s=>s.t!=="g")],["s","Estiramiento final",steps.filter(s=>s.g==="s")]];
+ let n=0;
+ groups.forEach(([g,label,list])=>{
+  const mins=Math.round(list.reduce((a,s)=>a+stepSecs(s),0)/60);
+  h+='<div class="secl" style="--c:'+KIND[g].c+'"><i></i>'+label+'<span>~'+mins+' min</span></div><div class="xlist">';
+  list.forEach(st=>{n++;const done=!!S.chk[k(w,d,st.key)];
+   let th,title,sub;
+   if(st.t==="g"){th=st.x.v?'<span class="th"><img loading="lazy" src="'+thumb(st.x.v)+'" alt=""><b>▶</b></span>':'<span class="ico">'+KIND[g].ic+'</span>';title=esc(st.x.n);sub=esc(gDose(st.x))}
+   else{const e=EX[st.id];th=e.v?'<span class="th"><img loading="lazy" src="'+thumb(e.v)+'" alt=""><b>▶</b></span>':'<span class="ico">🏃</span>';title=esc(e.n);
+    sub=e.k?'<b>'+esc(cardioSpec(w))+'</b>':'<b>'+e.s+' × '+esc(repTxt(e))+'</b> · '+e.rest+' s'+setDots(w,d,st.id)}
+   h+='<button class="xrow'+(done?" ok":"")+'" style="--c:'+KIND[kindOf(st)].c+'" data-act="item" data-k="'+st.key+'"><span class="xn">'+n+'</span>'+th+'<span class="xt"><span class="tt">'+title+'</span><span class="ss">'+sub+'</span></span><span class="chev">'+(done?"✓":"›")+'</span></button>'});
+  h+='</div>'});
+ return h+'<button class="linkbtn" data-act="rules">Reglas del plan</button>';
 }
 function mhead(t,sub){return '<div class="mh"><b>'+esc(t)+(sub?'<small>'+esc(sub)+'</small>':'')+'</b><button class="ib" data-act="close" aria-label="Cerrar">✕</button></div>'}
-function openEx(id){
- const w=V.w,d=V.d,e=EX[id],key=k(w,d,id),L=S.log[key]||{};
+function openItem(key){
+ const w=V.w,d=V.d,st=stepsOf(d).find(s=>s.key===key);if(!st)return;
+ if(st.t==="g"){const x=st.x;openModal(mhead(x.n,x.es)+vplayer(x.v,x.vv)+'<div class="big2" style="color:'+KIND[st.g].c+'">'+esc(gDose(x))+'</div><div class="tip">💡 '+esc(x.tip)+'</div><button class="btn big" style="margin-top:16px" data-act="close">Listo</button>');return}
+ const e=EX[st.id],kk=k(w,d,st.id),L=S.log[kk]||{};
  let h=mhead(e.n,e.es)+vplayer(e.v,0);
- if(e.k){h+='<div class="big2" style="color:var(--cardio);font-size:21px">'+esc(cardioSpec(e,w))+'</div><div class="tip">💡 '+esc(e.tip)+'</div><div class="lbl">Tu nota</div><input class="in txt" data-f="note" data-k="'+key+'" placeholder="km, inclinación, sensaciones" value="'+esc(L.note||"")+'">'}
+ if(e.k){h+='<div class="big2" style="color:var(--cardio)">'+esc(cardioSpec(w))+'</div><div class="tip">💡 '+esc(e.tip)+'</div><div class="lbl">Tu nota</div><input class="in txt" data-f="note" data-k="'+kk+'" placeholder="km, nivel, sensaciones" value="'+esc(L.note||"")+'">'}
  else{
-  h+='<div class="big2">'+setsOf(e,w)+' × '+esc(repTxt(e))+'</div><div class="meta"><span>⏱ '+restTxt(e)+'</span><span>'+esc(e.mus)+'</span>'+(e.m?'<span>'+esc(W(w).rir)+'</span>':'')+(e.ss?'<span>🔗 superserie</span>':'')+'</div><div class="tip">💡 '+esc(e.tip)+'</div>';
-  const ph=prevSummary(w,d,id);if(ph)h+='<div class="mut sm" style="margin-top:8px">↩ '+esc(ph)+'</div>';
-  const un=unitOf(id);
-  h+='<div class="lbl" style="display:flex;justify-content:space-between;align-items:center">Tu registro'+(e.nokg?'':'<span class="ut" style="margin:0">'+["kg","lb"].map(u=>'<button data-act="unit" data-m="1" data-id="'+id+'" data-v="'+u+'" class="'+(un===u?"on":"")+'">'+u+'</button>').join("")+'</span>')+'</div>';
-  for(let i=0;i<setsOf(e,w);i++){const s=(L.sets&&L.sets[i])||{};h+='<div class="setrow"><span class="mut" style="width:58px">Serie '+(i+1)+'</span>'+(e.nokg?'':'<input class="in" inputmode="decimal" placeholder="'+un+'" data-f="kg" data-i="'+i+'" data-k="'+key+'" value="'+esc(s.kg||"")+'">'+un+' ×')+'<input class="in" inputmode="numeric" placeholder="reps" data-f="reps" data-i="'+i+'" data-k="'+key+'" value="'+esc(s.reps||"")+'"></div>'}
+  h+='<div class="big2">'+e.s+' × '+esc(repTxt(e))+'</div><div class="meta"><span>⏱ '+e.rest+' s</span><span>'+esc(e.mus)+'</span><span>'+esc(W(w).rir)+'</span></div><div class="tip">💡 '+esc(e.tip)+'</div>';
+  const ph=prevSummary(w,d,st.id);if(ph)h+='<div class="mut sm" style="margin-top:8px">↩ '+esc(ph)+'</div>';
+  const un=unitOf(st.id);
+  h+='<div class="lbl" style="display:flex;justify-content:space-between;align-items:center">Tu registro'+(e.nokg?'':'<span class="ut">'+["kg","lb"].map(u=>'<button data-act="unit" data-m="1" data-id="'+st.id+'" data-v="'+u+'" class="'+(un===u?"on":"")+'">'+u+'</button>').join("")+'</span>')+'</div>';
+  for(let i=0;i<e.s;i++){const s=(L.sets&&L.sets[i])||{};h+='<div class="setrow"><span class="mut" style="width:58px">Serie '+(i+1)+'</span>'+(e.nokg?'':'<input class="in" inputmode="decimal" placeholder="'+un+'" data-f="kg" data-i="'+i+'" data-k="'+kk+'" value="'+esc(s.kg||"")+'">'+un+' ×')+'<input class="in" inputmode="numeric" placeholder="reps" data-f="reps" data-i="'+i+'" data-k="'+kk+'" value="'+esc(s.reps||"")+'"></div>'}
  }
- openModal(h+'<button class="btn big" style="margin-top:16px" data-act="close">Listo</button>');
-}
-function openList(title,items){
- let h=mhead(title);
- items.forEach(x=>{h+='<div class="mrow">'+(x.v?'<button class="th" data-act="video" data-id="'+x.v+'" data-vv="'+(x.vv?1:0)+'" data-t="'+esc(x.n)+'"><img loading="lazy" src="'+thumb(x.v)+'" alt=""><b>▶</b></button>':'<span class="ico">🏋️</span>')+
-  '<div><b>'+esc(x.n)+'</b><div class="spec" style="font-size:14px">'+esc(x.secs?((x.reps>1?x.reps+" × ":"")+x.secs+" s"+(x.sides>1?" por lado":"")):x.dose)+'</div><div class="mut sm">'+esc(x.tip)+'</div></div></div>'});
+ if(e.alt)h+='<div class="altc"><small>Si está ocupado</small><b>'+esc(e.alt.n)+'</b><span>'+esc(e.alt.es)+'</span>'+(e.alt.v?'<button class="vlink" data-act="video" data-id="'+e.alt.v+'" data-vv="0" data-t="'+esc(e.alt.n)+'">▶ Video</button>':'<a class="vlink" target="_blank" rel="noopener" href="'+ytSearch(e.alt.n)+'">▶ Buscar video</a>')+'</div>';
  openModal(h+'<button class="btn big" style="margin-top:16px" data-act="close">Listo</button>');
 }
 
-/* ============ ESCRITORIO ============ */
+/* ================= ESCRITORIO ================= */
 let T={end:0,run:false,mins:50,iv:null};
 function deskView(){
  const c=S.desk[today()]||0;
- let h='<h2 style="margin:8px 0 4px">🪑 Pausa de escritorio</h2><div class="mut sm">2 minutos cada 45–60 min sentado. Pesa tanto como el gym para tu postura.</div>';
- h+='<div class="card"><div class="row" style="justify-content:center">'+[45,50,60].map(m=>'<button class="btn s '+(T.mins===m?"":"o")+'" data-act="dmins" data-v="'+m+'">'+m+' min</button>').join("")+'</div>'+
+ let h='<h2 style="margin:8px 4px 4px">🪑 Pausa de escritorio</h2><div class="mut sm" style="margin:0 4px">2 minutos cada 45–60 min sentado.</div>';
+ h+='<div class="card"><div class="row" style="justify-content:center">'+[45,50,60].map(m=>'<button class="btn s '+(T.mins===m?"on":"")+'" data-act="dmins" data-v="'+m+'">'+m+' min</button>').join("")+'</div>'+
   '<div class="big" id="dtm">'+mmss(T.mins*60000)+'</div><div class="row" style="justify-content:center"><button class="btn" data-act="dstart">▶ Iniciar</button><button class="btn o" data-act="dstop">■ Parar</button></div>'+
-  '<div id="dmsg" class="mut sm" style="text-align:center;margin-top:10px">Pausas hoy: <b>'+c+'</b></div></div><div class="list">';
- DESK.forEach(x=>{h+='<button class="rowb" style="--c:var(--str)" data-act="video" data-id="'+x.v+'" data-vv="'+(x.vv?1:0)+'" data-t="'+esc(x.n)+'"><span class="th"><img loading="lazy" src="'+thumb(x.v)+'" alt=""><b>▶</b></span><span class="rt"><b>'+esc(x.n)+'</b><span class="spec" style="color:var(--str);font-size:14px">'+esc(x.dose)+'</span><span class="mut sm">'+esc(x.tip)+'</span></span><span class="st">›</span></button>'});
+  '<div id="dmsg" class="mut sm" style="text-align:center;margin-top:10px">Pausas hoy: <b>'+c+'</b></div></div><div class="xlist">';
+ DESK.forEach((x,i)=>{h+='<button class="xrow" style="--c:var(--str)" data-act="video" data-id="'+x.v+'" data-vv="0" data-t="'+esc(x.n)+'"><span class="xn">'+(i+1)+'</span><span class="th"><img loading="lazy" src="'+thumb(x.v)+'" alt=""><b>▶</b></span><span class="xt"><span class="tt">'+esc(x.n)+'</span><span class="ss"><b>'+esc(x.dose)+'</b> · '+esc(x.tip)+'</span></span><span class="chev">›</span></button>'});
  return h+'</div>';
 }
 function deskPaint(){const t=$("#dtm");if(t)t.textContent=mmss(T.run?T.end-Date.now():T.mins*60000)}
@@ -541,174 +583,191 @@ function dtick(){deskPaint();if(T.run&&T.end-Date.now()<=0){T.run=false;clearInt
  const m=$("#dmsg");if(m)m.innerHTML='<b>⏰ Hora de la pausa.</b><br><button class="btn" style="margin-top:8px" data-act="ddone">✓ Hecho, reiniciar</button>'}}
 function dstart(){unlockAudio();try{if("Notification" in window&&Notification.permission==="default")Notification.requestPermission()}catch(e){}T.end=Date.now()+T.mins*60000;T.run=true;clearInterval(T.iv);T.iv=setInterval(dtick,500);dtick()}
 
-/* ============ CUENTA ============ */
+/* ================= CUENTA ================= */
 function cuentaView(){
  let h='<div class="card"><h3>👤 Tu cuenta</h3>';
  if(authState==="in"&&user)h+='<div class="tip">Conectado como <b>'+esc(user.name)+'</b>. Tu progreso se guarda en tu cuenta y lo ves igual en el celular y en la compu.</div><button class="btn o" style="margin-top:10px" data-act="logout">Cerrar sesión</button>';
- else h+='<div class="tip">Entrá con la misma cuenta de Google que usás en el plan de los evangelios. Sin cuenta, el progreso queda solo en este navegador.</div><button class="btn" style="margin-top:10px" data-act="login">Iniciar sesión con Google</button>';
+ else h+='<div class="tip">Entrá con tu cuenta de Google para que el progreso quede guardado. Sin cuenta, queda solo en este navegador.</div><button class="btn" style="margin-top:10px" data-act="login">Iniciar sesión con Google</button>';
  h+='</div><div class="card"><h3>Sonido de los avisos</h3><button class="btn '+(SND?"":"o")+'" style="margin-top:10px" data-act="snd">'+(SND?"🔊 Activado":"🔇 Desactivado")+'</button></div>';
  h+='<div class="card"><h3>Respaldo</h3><div class="row" style="margin-top:10px"><button class="btn o s" data-act="export">Exportar</button><button class="btn o s" data-act="import">Importar</button><button class="btn d s" data-act="reset">Borrar todo</button></div><input type="file" id="file" accept="application/json" style="display:none"></div>';
  return h;
 }
 
-/* ============ MODAL ============ */
+/* ================= MODAL ================= */
 function openModal(html){$("#mbox").innerHTML=html;$("#modal").classList.add("on");$("#mbox").scrollTop=0}
 function closeModal(){$("#mbox").innerHTML="";$("#modal").classList.remove("on")}
 function openVideo(id,vv,title){openModal(mhead(title)+vplayer(id,vv)+'<button class="btn big" style="margin-top:14px" data-act="close">Listo</button>')}
-function confirmBox(title,text,btns){openModal(mhead(title)+'<div class="tip">'+text+'</div><div style="display:grid;gap:8px;margin-top:14px">'+btns+'</div>')}
+function confirmBox(title,text,btns){openModal(mhead(title)+(text?'<div class="tip">'+text+'</div>':'')+'<div style="display:grid;gap:8px;margin-top:14px">'+btns+'</div>')}
 
-/* ============ MODO ENTRENAR ============ */
-function stepsOf(d){const D=DAYS[d-1],out=[{t:"warm"}],ex=D.ex;
- for(let i=0;i<ex.length;i++){const e=EX[ex[i]];
-  if(e.ss&&ex[i+1]&&EX[ex[i+1]].ss){out.push({t:"ss",ids:[ex[i],ex[i+1]]});i++}
-  else if(e.k)out.push({t:e.k,id:ex[i]});else out.push({t:"ex",id:ex[i]})}
- out.push({t:"str"});return out}
+/* ================= MODO ENTRENAR ================= */
 const el=()=>R?Date.now()-R.start-R.pT-(R.pA?Date.now()-R.pA:0):0;
 const left=()=>R.pD-(el()-R.pS);
+const STEPS=()=>stepsOf(R.d);
+const curStep=()=>STEPS()[R.order[R.pos]];
+const isMachine=st=>st&&st.t!=="g";
+const done=st=>!!S.chk[k(R.w,R.d,st.key)];
 function phase(ph,secs){R.ph=ph;R.pS=el();R.pD=secs*1000;R.ann=-1;saveR();renderTrain()}
-function stepName(st){if(st.t==="warm")return"Aquecimento postural";if(st.t==="str")return"Alongamentos finais";if(st.t==="ss")return EX[st.ids[0]].n+" + "+EX[st.ids[1]].n;return EX[st.id].n}
-function stepSpec(st,w){if(st.t==="ex"){const e=EX[st.id];return setsOf(e,w)+" × "+repTxt(e)}if(st.t==="ss")return setsOf(EX[st.ids[0]],w)+" vueltas";if(st.t==="cardio"||st.t==="inter")return cardioSpec(EX[st.id],w);return""}
-function lastSub(st){if(st.t==="ex")return setsOf(EX[st.id],R.w)-1;if(st.t==="ss")return setsOf(EX[st.ids[0]],R.w)*2-1;if(st.t==="warm"||st.t==="str")return guided(st.t,R.d).length-1;return 0}
-
+function firstUndone(id){const L=S.log[k(R.w,R.d,id)]||{},n=EX[id].s;for(let i=0;i<n;i++){const s=L.sets&&L.sets[i];if(!s||!s.done)return i}return 0}
+function enter(){const st=curStep();R.sub=st&&st.t==="ex"?firstUndone(st.id):0;R.ph="work";R.ann=-1}
 function startDay(w,d){unlockAudio();keepAwake();
- R={w,d,start:Date.now(),pT:0,pA:null,i:0,sub:0,ph:"gwait",pS:0,pD:0,ann:-1};saveR();openTrain()}
+ R={w,d,start:Date.now(),pT:0,pA:null,order:stepsOf(d).map((s,i)=>i),pos:0,sub:0,ph:"work",pS:0,pD:0,ann:-1,alt:{},skip:{}};
+ enter();saveR();openTrain()}
 function openTrain(){unlockAudio();if(R&&!R.pA)keepAwake();closeModal();$("#train").classList.add("on");document.body.style.overflow="hidden";renderTrain()}
 function closeTrain(){$("#train").classList.remove("on");document.body.style.overflow="";releaseWake();renderApp()}
+/* tiempo restante estimado (s) */
+function remaining(){if(!R||R.ph==="done")return 0;const steps=STEPS();let t=0;
+ const st=curStep();
+ if(st.t==="ex"){const e=EX[st.id];t+=exSecs(e,R.sub)+(R.ph==="rest"?Math.max(0,left())/1000:0)}
+ else if(st.t==="cardio")t+=R.ph==="run"?Math.max(0,left())/1000:(R.ph==="post"?0:EX[st.id].mins*60);
+ else{const b=bouts(st.x);t+=(b.length-R.sub)*(st.x.secs?st.x.secs+8:45)}
+ if(R.ph==="trans")t+=Math.max(0,left())/1000;
+ for(let p=R.pos+1;p<R.order.length;p++){const s=steps[R.order[p]];if(!done(s))t+=stepSecs(s)}
+ return t}
+function behindMin(){return Math.round((el()/1000+remaining())/60-TARGET)}
 
-function foot(main,noBack){const canBack=!noBack&&!(R.i===0&&R.sub===0&&(R.ph==="work"||R.ph==="gwait"));
- return '<button class="bk" data-act="back" aria-label="Atrás" '+(canBack?"":"disabled")+'>‹</button>'+main}
+function foot(main,extra){const canBack=!(R.pos===0&&R.sub===0&&R.ph==="work");
+ return (extra?'<div class="xact">'+extra+'</div>':'')+'<div class="fmain"><button class="bk" data-act="back" aria-label="Atrás" '+(canBack?"":"disabled")+'>‹</button>'+main+'</div>'}
+function banner(kind,text,filled){return '<div class="banner'+(filled?" f":"")+'" style="--c:'+KIND[kind].c+'">'+text+'</div>'}
 function renderTrain(){
  if(!R)return;
- const w=R.w,d=R.d,D=DAYS[d-1],steps=stepsOf(d),st=steps[R.i];
- let bar='<div class="tbar"><button class="ib" data-act="tmenu" aria-label="Salir">✕</button><div class="clk"><small>Semana '+w+' · Día '+d+' · '+esc(D.t)+'</small><b id="clk">'+hms(el())+'</b></div><button class="ib" data-act="pause" aria-label="Pausar">'+(R.pA?"▶":"⏸")+'</button></div>';
- bar+='<div class="steps">'+steps.map((s,i)=>'<i class="'+(R.ph==="done"||i<R.i?"d":i===R.i?"c":"")+'"></i>').join("")+'</div>';
+ const steps=STEPS(),st=curStep(),D=DAYS[R.d-1];
+ const rem=R.ph==="done"?0:Math.round(remaining()/60);
+ let bar='<div class="tbar"><button class="ib" data-act="tmenu" aria-label="Salir">✕</button><div class="clk"><small>'+esc(D.t)+' · Paso '+(R.ph==="done"?steps.length:Math.min(steps.length,R.pos+1))+' de '+steps.length+'</small><b id="clk">'+hms(el())+'</b><small id="rem">'+(R.ph==="done"?"terminado":"faltan ~"+rem+" min")+'</small></div><div class="row" style="gap:6px;flex-wrap:nowrap"><button class="ib" data-act="steps" aria-label="Ver todos los pasos">☰</button><button class="ib" data-act="pause" aria-label="Pausar">'+(R.pA?"▶":"⏸")+'</button></div></div>';
+ bar+='<div class="steps">'+R.order.map((idx,p)=>{const s=steps[idx];const cls=done(s)?"d":p===R.pos?"c":R.skip[idx]?"sk":"";return '<i class="'+cls+'" style="--c:'+KIND[kindOf(s)].c+'"></i>'}).join("")+'</div>';
  let r;
  if(R.ph==="done")r=summaryView();
- else if(R.ph==="trans")r=transView(st,steps);
- else if(st.t==="warm"||st.t==="str")r=guidedView(st.t);
- else if(st.t==="ex"||st.t==="ss")r=exView(st,steps);
- else r=cardioView(st,steps);
- const pv='<div class="pausev '+(R.pA?"on":"")+'"><div style="font-size:50px">⏸</div><h2>En pausa</h2><div class="mut">Todo está frenado: el cronómetro general y los descansos.</div><div class="big" style="font-size:34px">'+hms(el())+'</div><button class="btn big" style="max-width:320px" data-act="pause">▶ Reanudar</button></div>';
+ else if(R.ph==="trans")r=transView(st);
+ else if(st.t==="g")r=guidedView(st);
+ else if(st.t==="ex")r=exView(st);
+ else r=cardioView(st);
+ const pv='<div class="pausev '+(R.pA?"on":"")+'"><div style="font-size:50px">⏸</div><h2>En pausa</h2><div class="mut">Todo está frenado.</div><div class="big" style="font-size:34px">'+hms(el())+'</div><button class="btn big" style="max-width:320px" data-act="pause">▶ Reanudar</button></div>';
  $("#train").innerHTML=bar+'<div class="tbody">'+r[0]+'</div><div class="tfoot">'+r[1]+'</div>'+pv;
 }
 function ring(ms,tot,color,sub){const p=tot?Math.max(0,Math.min(1,ms/tot)):0,C=2*Math.PI*90;
- return '<div class="ring"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="90" fill="none" stroke="var(--line)" stroke-width="12"/><circle id="rg" cx="100" cy="100" r="90" fill="none" stroke="'+color+'" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+(C*(1-p))+'"/></svg><div class="t"><div><b id="cd">'+mmss(ms)+'</b><span>'+esc(sub||"")+'</span></div></div></div>'}
-function vbtn(v,vv,t){return v?'<button class="btn o s" data-act="video" data-id="'+v+'" data-vv="'+(vv?1:0)+'" data-t="'+esc(t)+'">▶ Video</button>':''}
-function exLabel(steps){return 'Ejercicio '+R.i+' de '+(steps.length-2)}
-function transView(st,steps){
- const vid=st.t==="ex"?vbtn(EX[st.id].v,0,EX[st.id].n):st.t==="ss"?st.ids.map(id=>vbtn(EX[id].v,0,EX[id].n)).join(""):"";
- return['<div class="kind" style="text-align:center;margin-top:8px">Cambio de ejercicio</div>'+ring(left(),R.pD,"var(--warm)","para empezar")+
-  '<div class="nextc"><div class="mut sm">Próximo · '+(st.t==="str"?"final":exLabel(steps))+'</div><div class="tname" style="font-size:19px">'+esc(stepName(st))+'</div><div class="spec">'+esc(stepSpec(st,R.w))+'</div><div class="row" style="margin-top:8px">'+vid+'</div></div>',
-  foot('<button class="btn big" data-act="skip">Empezar ya</button>')]}
-function guidedView(kind){
- const b=guided(kind,R.d),isW=kind==="warm",col=isW?"var(--warm)":"var(--str)",title=isW?"Aquecimento":"Alongamento";
- if(R.ph==="work"){R.ph="gwait";R.sub=0}
- const cur=b[Math.min(R.sub,b.length-1)],x=cur.x;
- const vid=x.v||"";
+ return '<div class="ring"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="90" fill="none" stroke="var(--card2)" stroke-width="12"/><circle id="rg" cx="100" cy="100" r="90" fill="none" stroke="'+color+'" stroke-width="12" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+(C*(1-p))+'"/></svg><div class="t"><div><b id="cd">'+mmss(ms)+'</b><span>'+esc(sub||"")+'</span></div></div></div>'}
+function vlink(v,t,q){return v?'<button class="vlink" data-act="video" data-id="'+v+'" data-vv="0" data-t="'+esc(t)+'">▶ Video</button>':(q?'<a class="vlink" target="_blank" rel="noopener" href="'+ytSearch(q)+'">▶ Video</a>':'')}
+function exCount(st){const ex=STEPS().filter(s=>s.t!=="g");return(ex.findIndex(s=>s.key===st.key)+1)+" de "+ex.length}
+function stepTitle(st){return st.t==="g"?st.x.n:(R.alt[st.id]&&EX[st.id].alt?EX[st.id].alt.n:EX[st.id].n)}
+function transView(st){
+ const e=st.t!=="g"?EX[st.id]:null;
+ const sub=e?(e.k?cardioSpec(R.w):e.s+" × "+repTxt(e)+" · descanso "+e.rest+" s"):gDose(st.x);
+ const v=e?(R.alt[st.id]&&e.alt?e.alt.v:e.v):st.x.v;
+ return[banner("w","🔄 CAMBIO DE MÁQUINA",true)+'<div class="target" style="margin-top:8px">Dejá la máquina y prepará la próxima</div>'+ring(left(),R.pD,"var(--warm)","para empezar")+
+  '<div class="nextc"><small>Próximo · '+KIND[kindOf(st)].l+(e?' '+exCount(st):'')+'</small><b>'+esc(stepTitle(st))+'</b><span>'+esc(sub)+'</span>'+(e?vlink(v,stepTitle(st),stepTitle(st)):'')+'</div>',
+  foot('<button class="btn big" data-act="skip">Empezar ya</button>',e?'<button data-act="skipex">⏭ Está ocupada: saltar</button>'+(e.alt?'<button data-act="alt">🔁 '+(R.alt[st.id]?"Volver al original":"Usar alternativa")+'</button>':''):'')]}
+function guidedView(st){
+ const x=st.x,b=bouts(x),cur=b[Math.min(R.sub,b.length-1)],isW=st.g==="w";
+ const list=STEPS().filter(s=>s.g===st.g),idx=list.findIndex(s=>s.key===st.key)+1;
  const lado=cur.side<0?"":(cur.side===0?"Lado izquierdo":"Lado derecho"),vez=(x.reps||1)>1?"Vez "+(cur.rep+1)+" de "+x.reps:"";
- const tagTxt=[lado,vez].filter(Boolean).join(" · ");
- let h='<div class="kind" style="color:'+col+'">'+title+' · '+(R.sub+1)+' de '+b.length+'</div><div class="tname">'+esc(x.n)+'</div>'+(x.es?'<div class="tes">'+esc(x.es)+'</div>':'');
- if(tagTxt)h+='<div class="row" style="margin-bottom:8px"><span class="side" style="background:'+col+';color:#111;margin:0">'+esc(tagTxt)+'</span></div>';
- if(R.ph==="bout")return[h+ring(left(),R.pD,col,"respirá y soltá")+'<div class="tip">💡 '+esc(x.tip)+'</div>',
-  foot('<button class="btn o big" data-act="skip">Terminar ›</button>')];
- h+='<div class="gvid">'+vplayer(vid,x.vv&&x.v)+'</div>';
- if(!x.secs)return[h+'<div class="setlbl" style="margin-top:12px">'+esc(x.dose)+'</div><div class="tip">💡 '+esc(x.tip)+'</div>',
-  foot('<button class="btn big" data-act="gnext" style="background:'+col+';color:#111">✓ Hecho</button>')];
- return[h+'<div class="setlbl" style="margin-top:12px">'+x.secs+' segundos</div><div class="tip">💡 '+esc(x.tip)+'</div>',
-  foot('<button class="btn big" data-act="gtime" style="background:'+col+';color:#111">▶ Iniciar '+x.secs+' s</button>')]}
-function curSetInfo(st){
- if(st.t==="ex"){const e=EX[st.id];return{id:st.id,e,i:R.sub,n:setsOf(e,R.w)}}
- const n=setsOf(EX[st.ids[0]],R.w),which=R.sub%2,id=st.ids[which];return{id,e:EX[id],i:Math.floor(R.sub/2),n,which}}
-function exView(st,steps){
- const w=R.w,d=R.d,c=curSetInfo(st),e=c.e,key=k(w,d,c.id),L=S.log[key]||{};
- let head='<div class="kind">'+exLabel(steps)+' · '+esc(e.mus)+(st.t==="ss"?" · 🔗 superserie":"")+'</div><div class="tname">'+esc(e.n)+'</div><div class="tes">'+esc(e.es)+'</div>';
- head+='<div class="meta">'+(e.v?'<button class="vlink" data-act="video" data-id="'+e.v+'" data-vv="0" data-t="'+esc(e.n)+'">▶ Video</button>':'')+'<span>⏱ '+restTxt(e)+'</span>'+(e.m?'<span>'+esc(W(w).rir)+'</span>':'')+'</div>';
- let dots='<div class="dots">';for(let i=0;i<c.n;i++){const s=(L.sets&&L.sets[i])||{};dots+='<i class="'+(i===c.i&&R.ph!=="rest"?"c":s.done?"d":i===c.i?"c":"")+'"></i>'}dots+='</div>';
+ const tag=[lado,vez].filter(Boolean).join(" · ");
+ let h=banner(st.g,(isW?"🔥 CALENTAMIENTO ":"🧘 ESTIRAMIENTO ")+idx+" DE "+list.length,R.ph==="bout")+'<div class="tname">'+esc(x.n)+'</div><div class="tes">'+esc(x.es||"")+'</div>';
+ if(tag)h+='<span class="side" style="background:'+KIND[st.g].c+'">'+esc(tag)+'</span>';
+ if(R.ph==="bout")return[h+ring(left(),R.pD,KIND[st.g].c,"respirá y soltá")+'<div class="tip">💡 '+esc(x.tip)+'</div>',foot('<button class="btn o big" data-act="skip">Terminar ›</button>')];
+ h+='<div class="gvid">'+vplayer(x.v,x.vv)+'</div>';
+ if(!x.secs)return[h+'<div class="setlbl" style="margin-top:12px">'+esc(x.dose)+'</div><div class="tip">💡 '+esc(x.tip)+'</div>',foot('<button class="btn big" data-act="gnext" style="background:'+KIND[st.g].c+';color:#111">✓ Hecho</button>')];
+ return[h+'<div class="setlbl" style="margin-top:12px">'+x.secs+' segundos</div><div class="tip">💡 '+esc(x.tip)+'</div>',foot('<button class="btn big" data-act="gtime" style="background:'+KIND[st.g].c+';color:#111">▶ Iniciar '+x.secs+' s</button>')]}
+function exView(st){
+ const w=R.w,d=R.d,e=EX[st.id],kk=k(w,d,st.id),L=S.log[kk]||{},useAlt=R.alt[st.id]&&e.alt;
+ const name=useAlt?e.alt.n:e.n,es=useAlt?e.alt.es:e.es,v=useAlt?e.alt.v:e.v;
+ let head=banner("ex",R.ph==="rest"?"⏸ DESCANSO":"🏋️ EJERCICIO "+exCount(st)+" · Serie "+(R.sub+1)+" de "+e.s,R.ph==="rest")+
+  '<div class="tname">'+esc(name)+'</div><div class="tes">'+esc(es)+(useAlt?' · alternativa de '+esc(e.n):'')+'</div>'+
+  '<div class="meta">'+vlink(v,name,name)+'<span>⏱ '+e.rest+' s</span><span>'+esc(W(w).rir)+'</span></div>';
+ let dots='<div class="dots">';for(let i=0;i<e.s;i++){const s=(L.sets&&L.sets[i])||{};dots+='<i class="'+(s.done&&!(i===R.sub&&R.ph!=="rest")?"d":i===R.sub&&R.ph!=="rest"?"c":"")+'"></i>'}dots+='</div>';
  if(R.ph==="rest"){
-  const nx=st.t==="ss"?{e:EX[st.ids[0]],i:Math.floor(R.sub/2)}:{e,i:R.sub};
-  return[head+dots+'<div class="kind" style="text-align:center">Descanso</div>'+ring(left(),R.pD,"var(--acc)","respirá hondo")+
-   '<div class="nextc"><div class="mut sm">Siguiente</div><b>Serie '+(nx.i+1)+' de '+c.n+' · '+esc(nx.e.n)+'</b><div class="spec" style="font-size:15px">'+esc(repTxt(nx.e))+'</div></div>',
+  return[head+ring(left(),R.pD,"var(--acc)","descanso")+'<div class="nextc"><small>Después del descanso</small><b>Serie '+(R.sub+1)+' de '+e.s+'</b><span>'+esc(repTxt(e))+'</span></div>',
    foot('<button class="btn o big plus" data-act="plus">+15 s</button><button class="btn big" data-act="skip">Saltar descanso</button>')]}
- const cur=(L.sets&&L.sets[c.i])||{},prevIn=c.i>0&&L.sets&&L.sets[c.i-1]?L.sets[c.i-1]:null,lw=lastFor(w,d,c.id,c.i);
+ const cur=(L.sets&&L.sets[R.sub])||{},prevIn=R.sub>0&&L.sets&&L.sets[R.sub-1]?L.sets[R.sub-1]:null,lw=lastFor(w,d,st.id,R.sub);
  const kg=cur.kg||(prevIn&&prevIn.kg)||(lw&&lw.kg)||"",reps=cur.reps||e.r;
- let body=head+dots+'<div class="setlbl" id="setlbl">Serie '+(c.i+1)+' de '+c.n+'</div><div class="target">Objetivo: <b>'+esc(repTxt(e))+'</b></div>';
- body+='<div class="inputs" style="'+(e.nokg?"grid-template-columns:1fr":"")+'">'+(e.nokg?'':'<div class="stp"><div class="sl"><label>Peso</label><span class="ut">'+["kg","lb"].map(u=>'<button data-act="unit" data-id="'+c.id+'" data-v="'+u+'" class="'+(unitOf(c.id)===u?"on":"")+'">'+u+'</button>').join("")+'</span></div><div><button data-act="adj" data-f="kg" data-id="'+c.id+'" data-v="-1">−</button><input id="kg" inputmode="decimal" value="'+esc(kg)+'" placeholder="0"><button data-act="adj" data-f="kg" data-id="'+c.id+'" data-v="1">+</button></div></div>')+
-  '<div class="stp"><div class="sl"><label>'+(e.u&&e.u.indexOf("s")===0?"Segundos":"Reps")+'</label></div><div><button data-act="adj" data-f="reps" data-v="-1">−</button><input id="reps" inputmode="numeric" value="'+esc(reps)+'"><button data-act="adj" data-f="reps" data-v="1">+</button></div></div></div>';
+ let body=head+dots+'<div class="setlbl" id="setlbl">Serie '+(R.sub+1)+' de '+e.s+'</div><div class="target">Objetivo: <b>'+esc(repTxt(e))+'</b></div>';
+ body+='<div class="inputs" style="'+(e.nokg?"grid-template-columns:1fr":"")+'">'+(e.nokg?'':'<div class="stp"><div class="sl"><label>Peso</label><span class="ut">'+["kg","lb"].map(u=>'<button data-act="unit" data-id="'+st.id+'" data-v="'+u+'" class="'+(unitOf(st.id)===u?"on":"")+'">'+u+'</button>').join("")+'</span></div><div><button data-act="adj" data-f="kg" data-id="'+st.id+'" data-v="-1">−</button><input id="kg" inputmode="decimal" value="'+esc(kg)+'" placeholder="0"><button data-act="adj" data-f="kg" data-id="'+st.id+'" data-v="1">+</button></div></div>')+
+  '<div class="stp"><div class="sl"><label>Reps</label></div><div><button data-act="adj" data-f="reps" data-v="-1">−</button><input id="reps" inputmode="numeric" value="'+esc(reps)+'"><button data-act="adj" data-f="reps" data-v="1">+</button></div></div></div>';
  if(lw)body+='<div class="prev">↩ Semana '+lw.w+': '+(e.nokg?"":(lw.kg||"–")+" "+lw.u+" × ")+(lw.reps||"–")+'</div>';
+ const late=behindMin();
+ if(late>0&&R.sub<e.s-1)body+='<div class="late">⏰ Vas ~'+late+' min atrasado. Para llegar a los estiramientos, hacé una serie menos. <button data-act="endex">Terminar ejercicio</button></div>';
  body+='<div class="tip">💡 '+esc(e.tip)+'</div>';
- return[body,foot('<button class="btn big" data-act="setdone">✓ Serie hecha</button>')]}
-function cardioView(st,steps){
- const w=R.w,e=EX[st.id],key=k(w,R.d,st.id),L=S.log[key]||{},isI=st.t==="inter";
- const head='<div class="kind" style="color:var(--cardio)">'+exLabel(steps)+' · '+esc(e.mus)+'</div><div class="tname">'+esc(e.n)+'</div><div class="tes">'+esc(e.es)+'</div><div class="spec" style="color:var(--cardio)">'+esc(cardioSpec(e,w))+'</div>';
+ return[body,foot('<button class="btn big" data-act="setdone">✓ Serie hecha</button>',(R.sub===0&&!(L.sets&&L.sets.some(s=>s&&s.done))?'<button data-act="skipex">⏭ Ocupada: saltar y volver</button>':'')+(e.alt?'<button data-act="alt">🔁 '+(useAlt?"Volver al original":"Alternativa")+'</button>':''))]}
+function cardioView(st){
+ const w=R.w,e=EX[st.id],kk=k(w,R.d,st.id),L=S.log[kk]||{};
+ const head=banner("cardio","🏃 CARDIO · "+exCount(st),R.ph==="run")+'<div class="tname">'+esc(R.alt[st.id]&&e.alt?e.alt.n:e.n)+'</div><div class="tes">'+esc(e.es)+'</div><div class="meta"><span>'+esc(cardioSpec(w))+'</span></div>';
  if(R.ph==="run"){
-  if(isI){const t=el()-R.pS,rd=Math.min(W(w).rounds-1,Math.floor(t/120000)),wi=t%120000,fast=wi<30000;
-   return[head+'<div class="setlbl '+(fast?"fast":"slow")+'" id="ilbl" style="margin-top:12px">'+(fast?"🔥 FUERTE":"Suave")+'</div><div class="target">Ronda '+(rd+1)+' de '+W(w).rounds+'</div>'+ring(fast?30000-wi:120000-wi,fast?30000:90000,fast?"var(--cardio)":"#4ade80","de este tramo")+'<div class="mut sm" style="text-align:center">Total restante: <b id="itot">'+mmss(left())+'</b></div>',
-    foot('<button class="btn o big" data-act="cardioend">Terminar</button>')]}
-  return[head+ring(left(),R.pD,"var(--cardio)","restantes")+'<div class="tip">💡 '+esc(e.tip)+'</div>',foot('<button class="btn o big" data-act="cardioend">Terminar</button>')]}
- if(R.ph==="post")return[head+'<div class="card"><b>✅ ¡Hecho!</b><div class="mut sm" style="margin:6px 0">Nota opcional: km, inclinación, sensaciones.</div><input class="in txt" id="cnote" value="'+esc(L.note||"")+'"></div>',foot('<button class="btn big" data-act="cardiosave">Seguir ›</button>')];
- return[head+'<div class="tip">💡 '+esc(e.tip)+'</div>'+(isI?'<div class="tip">Te aviso con pitidos cuándo ir <b>fuerte</b> y cuándo <b>suave</b>.</div>':''),
-  foot('<button class="btn big" data-act="cardiostart" style="background:var(--cardio);color:#111">▶ Iniciar '+(isI?"intervalos":"cardio")+'</button>')]}
+  const segs=cardioSegs(w),t=(el()-R.pS)/1000;let acc=0,cur=segs[segs.length-1],segLeft=0;
+  for(const sg of segs){if(t<acc+sg.s){cur=sg;segLeft=acc+sg.s-t;break}acc+=sg.s}
+  if(segs.length===1)return[head+ring(left(),R.pD,"var(--cardio)","restantes")+'<div class="tip">💡 '+esc(e.tip)+'</div>',foot('<button class="btn o big" data-act="cardioend">Terminar</button>')];
+  return[head+'<div class="setlbl '+(cur.f?"fast":"slow")+'" style="margin-top:14px">'+(cur.f?"🔥 ":"")+esc(cur.l)+'</div><div class="target">'+(cur.r?"Intervalo "+cur.r+" de 6":"")+'</div>'+ring(segLeft*1000,cur.s*1000,cur.f?"var(--cardio)":"#4ade80","de este tramo")+'<div class="mut sm" style="text-align:center">Total restante: <b id="itot">'+mmss(left())+'</b></div>',
+   foot('<button class="btn o big" data-act="cardioend">Terminar</button>')]}
+ if(R.ph==="post")return[head+'<div class="card"><b>✅ ¡Hecho!</b><div class="mut sm" style="margin:6px 0">Nota opcional: nivel, km, sensaciones.</div><input class="in txt" id="cnote" value="'+esc(L.note||"")+'"></div>',foot('<button class="btn big" data-act="cardiosave">Seguir ›</button>')];
+ return[head+'<div class="tip">💡 '+esc(e.tip)+'</div>',foot('<button class="btn big" data-act="cardiostart" style="background:var(--cardio);color:#111">▶ Iniciar cardio</button>','<button data-act="skipex">⏭ Ocupado: saltar y volver</button>')]}
 function summaryView(){
  const w=R.w,d=R.d,D=DAYS[d-1];let sets=0,vol=0,pvol=0,rows='';
  D.ex.forEach(id=>{const e=EX[id];if(e.k){rows+='<tr><td>'+esc(e.n)+'</td><td style="text-align:right">'+(S.chk[k(w,d,id)]?"✓":"–")+'</td></tr>';return}
   const L=(S.log[k(w,d,id)]||{}).sets||[];let best=null;L.forEach(s=>{if(s&&s.done){sets++;vol+=toKg(s)*(num(s.reps)||0);if(!best||toKg(s)>=toKg(best))best=s}});
   if(w>1)((S.log[k(w-1,d,id)]||{}).sets||[]).forEach(s=>{if(s)pvol+=toKg(s)*(num(s.reps)||0)});
   rows+='<tr><td>'+esc(e.n)+'</td><td class="mut" style="text-align:right;white-space:nowrap">'+(best?(e.nokg||!best.kg?"":wtxt(best)+" × ")+best.reps:"–")+'</td></tr>'});
- const dur=R.end||el(),diff=pvol?Math.round((vol-pvol)/pvol*100):null;
- return['<div style="text-align:center;margin-top:12px;font-size:50px">🏁</div><div class="tname" style="text-align:center">¡Día terminado!</div><div class="mut" style="text-align:center">Semana '+w+' · Día '+d+' · '+esc(D.t)+'</div>'+
+ const dur=R.end||el(),diff=pvol?Math.round((vol-pvol)/pvol*100):null,miss=STEPS().filter(s=>!done(s)).length;
+ return['<div style="text-align:center;margin-top:12px;font-size:50px">🏁</div><div class="tname" style="text-align:center">¡Día terminado!</div><div class="mut" style="text-align:center">Semana '+w+' · '+esc(D.t)+'</div>'+
   '<div class="kpi"><div><b>'+hms(dur)+'</b><span>tiempo</span></div><div><b>'+sets+'</b><span>series</span></div><div><b>'+Math.round(vol)+'</b><span>kg'+(diff!==null?' · '+(diff>=0?"▲":"▼")+Math.abs(diff)+'%':"")+'</span></div></div>'+
-  '<div class="card"><table class="sum"><tbody>'+rows+'</tbody></table></div>',
+  (miss?'<div class="note">Quedaron '+miss+' pasos sin hacer.</div>':'')+'<div class="card"><table class="sum"><tbody>'+rows+'</tbody></table></div>',
   '<button class="btn big" data-act="finishclose">Volver al plan</button>']}
-function logSet(id,i,kg,reps){const key=k(R.w,R.d,id);S.log[key]=S.log[key]||{};const L=S.log[key];L.sets=L.sets||[];L.sets[i]={kg:kg==null?"":String(kg),u:unitOf(id),reps:reps==null?"":String(reps),done:1};save()}
-function nextStep(){const steps=stepsOf(R.d);R.i++;R.sub=0;
- if(R.i>=steps.length){finishDay();return}
- const st=steps[R.i];
- if(st.t==="str"){R.ph="gwait";saveR();renderTrain();return}
- if(R.i===1){R.ph="work";saveR();renderTrain();return}
- phase("trans",TRANS)}
+function stepsSheet(){
+ const steps=STEPS();let h=mhead("Pasos de hoy","Tocá uno para ir directo");
+ h+='<div class="xlist">'+R.order.map((idx,p)=>{const s=steps[idx],dn=done(s),cur=p===R.pos;
+  const st=dn?"✓":cur?"▶":R.skip[idx]?"⏭":"";
+  const sub=s.t==="g"?gDose(s.x):(s.t==="cardio"?cardioSpec(R.w):EX[s.id].s+" × "+repTxt(EX[s.id]));
+  return '<button class="xrow'+(dn?" ok":"")+(cur?" cur":"")+'" style="--c:'+KIND[kindOf(s)].c+'" data-act="jump" data-v="'+idx+'"><span class="xn">'+(p+1)+'</span><span class="xt"><span class="tt">'+esc(stepTitle(s))+'</span><span class="ss">'+KIND[kindOf(s)].l+' · '+esc(sub)+(R.skip[idx]&&!dn?' · <b>saltado</b>':'')+'</span></span><span class="chev">'+st+'</span></button>'}).join("")+'</div>';
+ openModal(h+'<button class="btn big" style="margin-top:14px" data-act="close">Cerrar</button>')}
+function logSet(id,i,kg,reps){const kk=k(R.w,R.d,id);S.log[kk]=S.log[kk]||{};const L=S.log[kk];L.sets=L.sets||[];L.sets[i]={kg:kg==null?"":String(kg),u:unitOf(id),reps:reps==null?"":String(reps),done:1};if(R.alt[id])L.sets[i].alt=1;save()}
+function markDone(st){S.chk[k(R.w,R.d,st.key)]=true;save()}
+function nextStep(){
+ R.pos++;
+ while(R.pos<R.order.length&&done(STEPS()[R.order[R.pos]]))R.pos++;
+ if(R.pos>=R.order.length){finishDay();return}
+ enter();const st=curStep();
+ if(isMachine(st))phase("trans",TRANS);else{saveR();renderTrain()}}
+function skipCurrent(){
+ const steps=STEPS(),idx=R.order.splice(R.pos,1)[0];R.skip[idx]=true;
+ let ins=R.order.length;for(let p=R.pos;p<R.order.length;p++){if(steps[R.order[p]].g==="s"){ins=p;break}}
+ R.order.splice(ins,0,idx);
+ if(R.order[R.pos]===idx){enter();saveR();renderTrain();return} // era lo único que quedaba
+ enter();const st=curStep();if(isMachine(st))phase("trans",TRANS);else{saveR();renderTrain()}}
+function jumpTo(idx){const i=R.order.indexOf(idx);if(i<0)return;R.order.splice(i,1);if(i<R.pos)R.pos--;R.order.splice(R.pos,0,idx);enter();saveR();closeModal();renderTrain()}
 function finishDay(){R.end=el();R.ph="done";S.ses[R.w+"."+R.d]={start:R.start,dur:R.end,date:today()};save();saveR();releaseWake();beep(3,990);renderTrain()}
+function lastSub(st){if(st.t==="ex")return EX[st.id].s-1;if(st.t==="g")return bouts(st.x).length-1;return 0}
 function goBack(){
- const steps=stepsOf(R.d),st=steps[R.i];
- const prevStep=()=>{if(R.i===0){R.sub=0;R.ph="work";saveR();renderTrain();return}
-  R.i--;const p=steps[R.i];R.sub=lastSub(p);
-  if(p.t==="warm"||p.t==="str"){R.ph="gwait";saveR();renderTrain();return}
-  R.ph=(p.t==="cardio"||p.t==="inter")?"post":"work";saveR();renderTrain()};
- if(R.ph==="trans"){prevStep();return}
- if(st.t==="ex"||st.t==="ss"){if(R.ph==="rest"||R.sub>0){R.sub--;R.ph="work";saveR();renderTrain()}else prevStep();return}
- if(st.t==="warm"||st.t==="str"){
-  if(R.ph==="bout"){R.ph="gwait";saveR();renderTrain();return}
-  if(R.sub>0){R.sub--;R.ph="gwait";saveR();renderTrain();return}
-  prevStep();return}
- if(R.ph==="work")prevStep();else{R.ph="work";saveR();renderTrain()}
-}
+ const st=curStep();
+ const prev=()=>{if(R.pos===0){R.sub=0;R.ph="work";saveR();renderTrain();return}R.pos--;const p=curStep();R.sub=lastSub(p);R.ph=p.t==="cardio"?"post":"work";saveR();renderTrain()};
+ if(R.ph==="trans"){prev();return}
+ if(R.ph==="rest"){R.sub--;R.ph="work";saveR();renderTrain();return}
+ if(R.ph==="bout"||R.ph==="run"){R.ph="work";saveR();renderTrain();return}
+ if(R.ph==="post"){R.ph="work";saveR();renderTrain();return}
+ if(R.sub>0){R.sub--;R.ph="work";saveR();renderTrain();return}
+ prev()}
 function onPhaseEnd(){
- const st=stepsOf(R.d)[R.i];
+ const st=curStep();
  if(R.ph==="rest"||R.ph==="trans"){R.ph="work";saveR();beep(2);renderTrain();const s=$("#setlbl");if(s)s.parentElement.classList.add("flash");return}
  if(R.ph==="run"){R.ph="post";saveR();beep(3);renderTrain();return}
- if(R.ph==="bout"){const b=guided(st.t,R.d);R.sub++;
-  if(R.sub>=b.length){S.chk[k(R.w,R.d,st.t)]=true;save();beep(2);if(st.t==="str")finishDay();else nextStep();return}
-  beep(2,660);R.ph="gwait";saveR();renderTrain();return}
-}
+ if(R.ph==="bout"){beep(2,660);gAdvance(st);return}}
+function gAdvance(st){R.sub++;if(R.sub>=bouts(st.x).length){markDone(st);nextStep()}else{R.ph="work";saveR();renderTrain()}}
 function tick(){
  if(!R||!$("#train").classList.contains("on"))return;
  const c=$("#clk");if(c&&R.ph!=="done")c.textContent=hms(el());
- if(R.pA||R.ph==="done"||R.ph==="work"||R.ph==="post"||R.ph==="gwait")return;
- const st=stepsOf(R.d)[R.i],C=2*Math.PI*90;
- if(R.ph==="run"&&st&&st.t==="inter"){
-  const t=el()-R.pS,seg=Math.floor(t/120000)*2+((t%120000)<30000?0:1);
-  if(R.ann===-1)R.ann=seg;
-  else if(seg!==R.ann&&left()>0){R.ann=seg;saveR();beep(seg%2===0?3:1,seg%2===0?990:660);renderTrain();return}
-  const wi=t%120000,fast=wi<30000,rem=fast?30000-wi:120000-wi,cd=$("#cd"),it=$("#itot"),rg=$("#rg");
-  if(cd)cd.textContent=mmss(rem);if(it)it.textContent=mmss(left());if(rg)rg.setAttribute("stroke-dashoffset",C*(1-rem/(fast?30000:90000)));
+ if(R.pA||R.ph==="done"||R.ph==="work"||R.ph==="post")return;
+ const st=curStep(),C=2*Math.PI*90;
+ if(R.ph==="run"&&st.t==="cardio"&&W(R.w).iv){
+  const segs=cardioSegs(R.w),t=(el()-R.pS)/1000;let acc=0,i=0,segLeft=0;
+  for(;i<segs.length;i++){if(t<acc+segs[i].s){segLeft=acc+segs[i].s-t;break}acc+=segs[i].s}
+  if(R.ann===-1)R.ann=i;else if(i!==R.ann&&left()>0){R.ann=i;saveR();const f=segs[i]&&segs[i].f;beep(f?3:1,f?990:660);renderTrain();return}
+  const sg=segs[Math.min(i,segs.length-1)],cd=$("#cd"),it=$("#itot"),rg=$("#rg");
+  if(cd)cd.textContent=mmss(segLeft*1000);if(it)it.textContent=mmss(left());if(rg)rg.setAttribute("stroke-dashoffset",C*(1-segLeft/sg.s));
  } else {
   const cd=$("#cd"),rg=$("#rg"),l=left();if(cd)cd.textContent=mmss(l);if(rg)rg.setAttribute("stroke-dashoffset",C*(1-Math.max(0,l)/R.pD));
-  if(R.ph==="rest"&&l<=3000&&l>0&&R.ann!==Math.ceil(l/1000)){R.ann=Math.ceil(l/1000);beep(1,520)}
+  if((R.ph==="rest"||R.ph==="trans")&&l<=3000&&l>0&&R.ann!==Math.ceil(l/1000)){R.ann=Math.ceil(l/1000);beep(1,520)}
  }
  if(left()<=0)onPhaseEnd();
 }
 setInterval(tick,250);
+setInterval(()=>{const r=$("#rem");if(r&&R&&R.ph!=="done")r.textContent="faltan ~"+Math.round(remaining()/60)+" min"},5000);
 
-/* ============ EVENTOS ============ */
+/* ================= EVENTOS ================= */
 document.addEventListener("click",ev=>{
  if(ev.target.id==="modal"){closeModal();if(V.view==="plan"&&!$("#train").classList.contains("on"))renderApp();return}
  const el_=ev.target.closest("[data-act]");if(!el_)return;
@@ -720,36 +779,36 @@ document.addEventListener("click",ev=>{
   case"play":playIn(el_);break;
   case"video":openVideo(el_.dataset.id,el_.dataset.vv==="1",el_.dataset.t||"");break;
   case"close":closeModal();if(V.view==="plan"&&!$("#train").classList.contains("on"))renderApp();break;
-  case"exinfo":openEx(el_.dataset.id);break;
-  case"warminfo":openList("Aquecimento postural",warmList(V.d));break;
-  case"strinfo":openList("Alongamentos finais",DAYS[V.d-1].str.map(x=>STR[x]));break;
-  case"rules":openModal(mhead("Reglas del plan")+'<div class="tip">• Descansos: 90 s en los pesados, 45–60 s en los chicos. La web los cuenta.<br><br>• Muñeca: si aparece dolor (no cansancio), cambiá a mancuernas con agarre neutro. Flexiones en el piso: fuera.<br><br>• Si te atrasás, recortá una serie del último ejercicio. Nunca los estiramientos.<br><br>• Dolor agudo, mareo u hormigueo: pará.</div><button class="btn big" style="margin-top:14px" data-act="close">Entendido</button>');break;
+  case"item":openItem(el_.dataset.k);break;
+  case"rules":openModal(mhead("Reglas del plan")+'<div class="tip">• Descansos: 75 s en los ejercicios pesados y 45 s en los chicos. Ya contemplan el tiempo de agarrar el celular.<br><br>• Entre máquinas tenés 2 min para dejar una y preparar la otra.<br><br>• Máquina ocupada: «Saltar y volver» o «Alternativa».<br><br>• Si vas atrasado, la web te avisa: hacé una serie menos, nunca saltees los estiramientos.<br><br>• Muñeca: si duele (no cansancio), pasá a mancuernas con agarre neutro.<br><br>• Dolor agudo, mareo u hormigueo: pará.</div><button class="btn big" style="margin-top:14px" data-act="close">Entendido</button>');break;
   case"start":{const w=+el_.dataset.w,d=+el_.dataset.d;
-   if(prog(w,d)[0]>0)confirmBox("¿Empezar este día de nuevo?","Ya tenés registros de este día. Las series que vuelvas a hacer se sobrescriben.",'<button class="btn big" data-act="startok" data-w="'+w+'" data-d="'+d+'">Empezar</button><button class="btn o big" data-act="close">Cancelar</button>');
+   if(prog(w,d)[0]>0)confirmBox("¿Empezar este día?","Ya tenés pasos hechos en este día. Los que ya están hechos se saltean solos.",'<button class="btn big" data-act="startok" data-w="'+w+'" data-d="'+d+'">Empezar</button><button class="btn o big" data-act="close">Cancelar</button>');
    else startDay(w,d);break}
-  case"startok":closeModal();startDay(+el_.dataset.w,+el_.dataset.d);break;
+  case"startok":{closeModal();const w=+el_.dataset.w,d=+el_.dataset.d;startDay(w,d);if(done(curStep())){R.pos=-1;nextStep()}break}
   case"resume":openTrain();break;
   case"tmenu":confirmBox("¿Salir del entrenamiento?","",'<button class="btn o big" data-act="later">Volver al plan (sigue en curso)</button><button class="btn big" data-act="endnow">Terminar el día ahora</button><button class="btn o big" data-act="discard" style="color:var(--danger)">Descartar sesión</button><button class="btn o big" data-act="close">Cancelar</button>');break;
   case"later":closeModal();closeTrain();break;
   case"endnow":closeModal();finishDay();break;
   case"discard":closeModal();R=null;saveR();closeTrain();break;
   case"pause":if(!R)break;unlockAudio();if(R.pA){R.pT+=Date.now()-R.pA;R.pA=null;keepAwake()}else{R.pA=Date.now();releaseWake()}saveR();renderTrain();break;
+  case"steps":stepsSheet();break;
+  case"jump":jumpTo(+v);break;
   case"back":goBack();break;
-  case"gstart":unlockAudio();R.sub=0;R.ph="gwait";saveR();renderTrain();break;
-  case"gtime":{unlockAudio();const st=stepsOf(R.d)[R.i];phase("bout",guided(st.t,R.d)[R.sub].x.secs);break}
-  case"gnext":{const st=stepsOf(R.d)[R.i],b=guided(st.t,R.d);R.sub++;if(R.sub>=b.length){S.chk[k(R.w,R.d,st.t)]=true;save();if(st.t==="str")finishDay();else nextStep()}else{R.ph="gwait";saveR();renderTrain()}break}
-  case"unit":{const id=el_.dataset.id,kgI=$("#kg"),val=kgI?kgI.value:null;S.unit[id]=v;save();if(el_.dataset.m){openEx(id)}else{renderTrain();const n=$("#kg");if(n&&val!==null)n.value=val}break}
   case"skip":R.pD=el()-R.pS;onPhaseEnd();break;
   case"plus":R.pD+=15000;saveR();break;
+  case"skipex":skipCurrent();break;
+  case"alt":{const st=curStep();R.alt[st.id]=!R.alt[st.id];saveR();renderTrain();break}
+  case"endex":{markDone(curStep());nextStep();break}
+  case"gtime":{unlockAudio();phase("bout",curStep().x.secs);break}
+  case"gnext":gAdvance(curStep());break;
+  case"unit":{const id=el_.dataset.id,kgI=$("#kg"),val=kgI?kgI.value:null;S.unit[id]=v;save();if(el_.dataset.m){openItem(id)}else{renderTrain();const n=$("#kg");if(n&&val!==null)n.value=val}break}
   case"adj":{const inp=$("#"+el_.dataset.f);if(!inp)break;const x=(num(inp.value)||0)+parseFloat(v)*(el_.dataset.f==="kg"?(unitOf(el_.dataset.id)==="lb"?5:2.5):1);inp.value=String(Math.max(0,Math.round(x*10)/10));break}
-  case"setdone":{unlockAudio();const st=stepsOf(R.d)[R.i],c=curSetInfo(st),kgI=$("#kg"),rI=$("#reps");
-   logSet(c.id,c.i,c.e.nokg?"":(kgI?kgI.value.replace(",","."):""),rI?rI.value:"");
-   if(st.t==="ex"){if(c.i<c.n-1){R.sub++;phase("rest",c.e.rest)}else{S.chk[k(R.w,R.d,c.id)]=true;save();nextStep()}}
-   else{if(c.which===0){R.sub++;R.ph="work";saveR();renderTrain()}else if(c.i<c.n-1){R.sub++;phase("rest",c.e.rest)}else{st.ids.forEach(id=>S.chk[k(R.w,R.d,id)]=true);save();nextStep()}}
-   break}
-  case"cardiostart":{unlockAudio();const st=stepsOf(R.d)[R.i];phase("run",st.t==="inter"?W(R.w).rounds*120:W(R.w).cardio*60);break}
+  case"setdone":{unlockAudio();const st=curStep(),e=EX[st.id],kgI=$("#kg"),rI=$("#reps");
+   logSet(st.id,R.sub,e.nokg?"":(kgI?kgI.value.replace(",","."):""),rI?rI.value:"");
+   if(R.sub<e.s-1){R.sub++;phase("rest",e.rest)}else{markDone(st);nextStep()}break}
+  case"cardiostart":unlockAudio();phase("run",EX[curStep().id].mins*60);break;
   case"cardioend":R.pD=el()-R.pS;onPhaseEnd();break;
-  case"cardiosave":{const st=stepsOf(R.d)[R.i],key=k(R.w,R.d,st.id),n=$("#cnote");S.log[key]=S.log[key]||{};if(n)S.log[key].note=n.value;S.chk[key]=true;save();nextStep();break}
+  case"cardiosave":{const st=curStep(),kk=k(R.w,R.d,st.id),n=$("#cnote");S.log[kk]=S.log[kk]||{};if(n)S.log[kk].note=n.value;markDone(st);nextStep();break}
   case"finishclose":{const w=R.w,d=R.d;R=null;saveR();closeTrain();V.view="plan";V.w=w;V.d=d;renderApp();break}
   case"dmins":T.mins=+v;if(!T.run)renderApp();break;
   case"dstart":dstart();break;
